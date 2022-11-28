@@ -11,3 +11,5 @@ qalculate
 vlc
 xmonad/.stack-work
 nvim/plugged
+xmonad/.log
+xmonad/script/.banner

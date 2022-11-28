@@ -278,10 +278,13 @@ myKeyBindings conf@(XConfig {XMonad.modMask = myModMask}) = mkKeymap conf $
     , ("M-<Page_Down>", spawn "amixer -D pulse sset Master 5%-")            -- master device volume-
     , ("M-<Home>", spawn "cmus-remote --volume +1%")                        -- cmus volume+
     , ("M-<End>", spawn "cmus-remote --volume -1%")                         -- cmus volume-
-    , ("M-<F5>", spawnOn "sys" $ myTerminal                                 -- sudo steam-mount
+    , ("M-<F5>", spawnOn "sys" $ myTerminal                                 -- sudo steam-chroot
+                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
+                              ++ " -e sudo steam-chroot")
+    , ("M-<F6>", spawnOn "sys" $ myTerminal                                 -- sudo steam-mount
                               ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
                               ++ " -e sudo steam-mount")
-    , ("M-<F6>", spawnOn "sys" $ myTerminal                                 -- sudo steam-umount
+    , ("M-<F7>", spawnOn "sys" $ myTerminal                                 -- sudo steam-umount
                               ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
                               ++ " -e sudo steam-umount")
     , ("M-<F9>", spawn "cmus-remote --pause")                               -- cmus pause toggle
@@ -396,11 +399,11 @@ myManageHook = composeAll
         , (className =? "Alacritty" <&&> (title =? "audacity" <||> "audacity " ?^ title))                       --> doShift ( myWorkspaces !! 6 )
         
         -- Steam
-        , className =? "Steam"                                                                                  --> doShift' "ful"
+        , className =? "Steam"                                                                                  --> doShift ( myWorkspaces !! 3 )
         , (className =? "Alacritty" <&&> (title =? "steam" <||> "steam " ?^ title))                             --> doShift ( myWorkspaces !! 6 )
         , (className =? "Alacritty" <&&> (title =? "steam-chroot" <||> "steam-chroot " ?^ title))               --> doShift ( myWorkspaces !! 6 )
         , (className =? "Alacritty" <&&> (title =? "sudo steam-chroot" <||> "sudo steam-chroot " ?^ title))     --> doShift ( myWorkspaces !! 6 )
-        , className =? "csgo_linux64"                                                                           --> doShift ( myWorkspaces !! 6 )
+        , className =? "csgo_linux64"                                                                           --> doShift ( myWorkspaces !! 3 )
                                                                                                                  >> doSink
         
         -- Firefox
