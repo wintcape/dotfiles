@@ -28,5 +28,5 @@ terminalPrompt :: XPConfig -> X ()
 terminalPrompt c =
     io getCommands
     >>= \cmds ->
-        mkXPrompt Terminal c (getShellCompl cmds $ searchPredicate c) (\input ->
-            runInTerm ("--title \"" ++ input ++ "\"") input)
+        mkXPrompt Terminal c ( getShellCompl cmds $ searchPredicate c ) ( \input ->
+            runInTerm ( "--title \"" ++ input ++ "\"" ) input )
