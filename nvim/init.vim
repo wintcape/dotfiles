@@ -1,16 +1,16 @@
 " Global vim behavior
 
-set number											        " Show line numbers
-set autoindent										        " Auto indent
-set mouse=a											        " Enable mouse functionality
-set showmatch										        " Brace matching
+set number							" Show line numbers
+set autoindent							" Auto indent
+set mouse=a							" Enable mouse functionality
+set showmatch							" Brace matching
 set expandtab tabstop=4 shiftwidth=4 smarttab softtabstop=4	" TAB behavior
-set completeopt-=preview
-set title											        " Dynamic window title
-set clipboard+=unnamedplus							        " Set global clipboard
-set autochdir										        " Dynamic cwd
-set splitbelow										        " Vertical split
-set splitright										        " Horizontal split
+set completeopt-=preview					" No preview window
+set title							" Dynamic window title
+set clipboard+=unnamedplus					" Set global clipboard
+set autochdir							" Dynamic cwd
+set splitbelow							" Vertical split
+set splitright							" Horizontal split
 
 
 " Plugins
@@ -21,10 +21,10 @@ Plug 'https://github.com/vim-airline/vim-airline'		" Status bar
 Plug 'https://github.com/preservim/nerdtree'			" Directory explorer
 Plug 'https://github.com/tpope/vim-commentary'			" Comments for gcc, gc
 Plug 'https://github.com/tc50cal/vim-terminal'			" Vim terminal
-Plug 'https://github.com/terryma/vim-multiple-cursors'	" Multiple cursors
-Plug 'https://github.com/preservim/tagbar'				" Tagbar
-Plug 'https://github.com/neoclide/coc.nvim'				" Code autocompletion
-Plug 'rubixninja314/vim-mcfunction'						" MCFUNCTION syntax
+Plug 'https://github.com/terryma/vim-multiple-cursors'		" Multiple cursors
+Plug 'https://github.com/preservim/tagbar'			" Tagbar
+Plug 'https://github.com/neoclide/coc.nvim'			" Code autocompletion
+Plug 'rubixninja314/vim-mcfunction'				" MCFUNCTION syntax
 call plug#end()
 
 
@@ -40,7 +40,7 @@ syntax on
 
 " NERDTree
 
-let g:NERDTreeMinimalMenu=1
+let g:NERDTreeMinimalMenu=1					" Bugfix for menu
 let g:NERDTreeDirArrowExpandable='+'
 let g:NERDTreeDirArrowCollapsible='~'
 
@@ -141,9 +141,6 @@ imap <C-v> <C-r><C-o>+
 nmap <C-a> gg<HOME>vG<END>
 imap <C-a> <ESC><C-a>
 vmap a <ESC><C-a>
-
-" Force-write with sudo
-cmap w!! w !sudo tee > /dev/null %
 
 
 " Startup hook
