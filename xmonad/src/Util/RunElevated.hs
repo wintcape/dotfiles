@@ -7,6 +7,7 @@ import Config.Prelude           (myPath, myTerminal)
 
 import XMonad
 
+import XMonad.Actions.OnScreen  (viewOnScreen)
 import XMonad.Actions.SpawnOn   (spawnOn)
 import XMonad.Util.SpawnOnce    (spawnOnOnce)
 
@@ -17,5 +18,6 @@ runInTerm msg opts cmd = myTerminal ++ " " ++ opts
                       ++ " \"" ++ msg ++ "\" \"" ++ cmd ++ "\""
 
 runInTerm', runInTerm'' :: String -> String -> String -> X ()
-runInTerm'  msg opts cmd = spawnOn      "sys" $ runInTerm msg opts cmd
-runInTerm'' msg opts cmd = spawnOnOnce  "sys" $ runInTerm msg opts cmd
+runInTerm'  msg opts cmd =  (windows $ viewOnScreen 1 "sys")
+                         >> (spawnOn   "sys" $ runInTerm msg opts cmd)
+runInTerm'' msg opts cmd = spawnOnOnce "sys" $ runInTerm msg opts cmd

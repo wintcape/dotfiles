@@ -356,66 +356,66 @@ myManageHook = composeAll
         [
 
         -- Floaters! (lol)
-            className =? "confirm"                                                                                --> myDoFloat
-        ,   className =? "file_progress"                                                                          --> myDoFloat
-        ,   className =? "dialog"                                                                                 --> myDoFloat
-        ,   className =? "download"                                                                               --> myDoFloat
-        ,   className =? "error"                                                                                  --> myDoFloat
-        ,   className =? "notification"                                                                           --> myDoFloat
-        ,   className =? "splash"                                                                                 --> myDoFloat
-        ,   className =? "toolbar"                                                                                --> myDoFloat
+            className =? "confirm"                                                                                  --> myDoFloat
+        ,   className =? "file_progress"                                                                            --> myDoFloat
+        ,   className =? "dialog"                                                                                   --> myDoFloat
+        ,   className =? "download"                                                                                 --> myDoFloat
+        ,   className =? "error"                                                                                    --> myDoFloat
+        ,   className =? "notification"                                                                             --> myDoFloat
+        ,   className =? "splash"                                                                                   --> myDoFloat
+        ,   className =? "toolbar"                                                                                  --> myDoFloat
 
         -- Thunar
-        ,   className =? "Thunar"                                                                                 --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
-        , ( className =? "Thunar"    <&&>   title =? "Create New Folder" )                                         --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
+        ,   className =? "Thunar"                                                                                   --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
+        , ( className =? "Thunar"    <&&>   title =? "Create New Folder" )                                          --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
         , ( className =? "Alacritty" <&&> ( title =? "thunar" <||> "thunar " ?^ title ) )                           --> doShift ( myWorkspaces !! 6 )
 
         -- sys workspace
-        ,   className =? "Xmessage"                                                                               --> doHideIgnore
-                                                                                                                -- >> doShift "sys"
+        ,   className =? "Xmessage"                                                                                 --> doHideIgnore
+                                                                                                                    -- >> doShift "sys"
 
         -- Image viewing / capture
-        ,   className =? "vlc"                                                                                    --> liftX   (windows $ viewOnScreen 1 ( myWorkspaces !! 2 ))
-                                                                                                                 >> doShift ( myWorkspaces !! 2 )
-        ,   className =? "fim"                                                                                    --> liftX   (windows $ viewOnScreen 1 ( myWorkspaces !! 2 ))
-                                                                                                                 >> doShift ( myWorkspaces !! 2 )
-        ,   className =? "obs"                                                                                    --> liftX   (windows $ viewOnScreen 0 ( myWorkspaces !! 4 ))
-                                                                                                                 >> doShift ( myWorkspaces !! 0 )
+        ,   className =? "vlc"                                                                                      --> liftX   (windows $ viewOnScreen 1 ( myWorkspaces !! 2 ))
+                                                                                                                     >> doShift ( myWorkspaces !! 2 )
+        ,   className =? "fim"                                                                                      --> liftX   (windows $ viewOnScreen 1 ( myWorkspaces !! 2 ))
+                                                                                                                     >> doShift ( myWorkspaces !! 2 )
+        ,   className =? "obs"                                                                                      --> liftX   (windows $ viewOnScreen 0 ( myWorkspaces !! 4 ))
+                                                                                                                     >> doShift ( myWorkspaces !! 0 )
         , ( className =? "Alacritty" <&&> ( title =? "vlc" <||> "vlc " ?^ title ) )                                 --> doShift ( myWorkspaces !! 6 )
         , ( className =? "Alacritty" <&&> ( title =? "fim" <||> "fim " ?^ title ) )                                 --> doShift ( myWorkspaces !! 6 )
         , ( className =? "Alacritty" <&&> ( title =? "obs" <||> "obs " ?^ title ) )                                 --> doShift ( myWorkspaces !! 6 )
         
         -- Minecraft
-        , "Minecraft" ?^ className                                                                              --> doShift ( myWorkspaces !! 2 )
-        , ( className =? "minecraft-launcher" <||> className =? "Minecraft Launcher" )                            --> doShift ( myWorkspaces !! 2 )
-        , ( className =? "Minecraft Launcher" <&&> title =? "Minecraft game output" )                             --> doShift ( myWorkspaces !! 6 )
-        , ( className =? "Alacritty" <&&> ( title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title ) )   --> doShift ( myWorkspaces !! 6 )
+        ,  "Minecraft" ?^ className                                                                                 --> doShift ( myWorkspaces !! 2 )
+        , ( className =? "minecraft-launcher" <||> className =? "Minecraft Launcher" )                              --> doShift ( myWorkspaces !! 2 )
+        , ( className =? "Minecraft Launcher" <&&>   title =? "Minecraft game output" )                             --> doShift ( myWorkspaces !! 6 )
+        , ( className =? "Alacritty"          <&&> ( title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title ) ) --> doShift ( myWorkspaces !! 6 )
 
         -- Audacity
-        ,   className =? "Audacity"                                                                               --> liftX   (windows $ viewOnScreen 0 ( myWorkspaces !! 4 ))
-                                                                                                                 >> doShift ( myWorkspaces !! 0 )
-        , ( className =? "Audacity" <&&> title =? "Select one or more files" )                                    --> myDoFloat
+        ,   className =? "Audacity"                                                                                 --> liftX   (windows $ viewOnScreen 0 ( myWorkspaces !! 4 ))
+                                                                                                                     >> doShift ( myWorkspaces !! 0 )
+        , ( className =? "Audacity"  <&&>   title =? "Select one or more files" )                                   --> myDoFloat
         , ( className =? "Alacritty" <&&> ( title =? "audacity" <||> "audacity " ?^ title ) )                       --> doShift ( myWorkspaces !! 6 )
         
         -- Steam
-        ,   className =? "Steam"                                                                                  --> liftX   (windows $ viewOnScreen 1 ( myWorkspaces !! 2 ))
-                                                                                                                 >> liftX   (windows $ viewOnScreen 0 ( myWorkspaces !! 6 ))
-                                                                                                                 >> doShift ( myWorkspaces !! 2 )
-        , ( className =? "Steam"     <&&> title =? "Friends List" )                                               --> doHideIgnore
-        , ( className =? "Steam"     <&&> title =? "Steam - News" )                                               --> doHideIgnore
-        ,   className =? "csgo_linux64"                                                                           --> doShift ( myWorkspaces !! 2 )
-                                                                                                                 >> doSink
+        ,   className =? "Steam"                                                                                    --> liftX   (windows $ viewOnScreen 1 ( myWorkspaces !! 2 ))
+                                                                                                                     >> liftX   (windows $ viewOnScreen 0 ( myWorkspaces !! 6 ))
+                                                                                                                     >> doShift ( myWorkspaces !! 2 )
+        , ( className =? "Steam"     <&&> title =? "Friends List" )                                                 --> doHideIgnore
+        , ( className =? "Steam"     <&&> title =? "Steam - News" )                                                 --> doHideIgnore
+        ,   className =? "csgo_linux64"                                                                             --> doShift ( myWorkspaces !! 2 )
+                                                                                                                     >> doSink
         
         -- Firefox
-        , ( className =? "firefox" <&&> title =? "Mozilla Firefox" )                                              --> doShift' "web"
-        , ( className =? "firefox" <&&> title =? "File Upload" )                                                  --> myDoFloat
-        , ( className =? "firefox" <&&> title =? "Open File" )                                                    --> myDoFloat
-        , ( className =? "firefox" <&&> title =? "Library" )                                                      --> myDoFloat
-        , ( className =? "firefox" <&&> title =? "Choose Application" )                                           --> myDoFloat
+        , ( className =? "firefox"   <&&>   title =? "Mozilla Firefox" )                                            --> doShift' "web"
+        , ( className =? "firefox"   <&&>   title =? "File Upload" )                                                --> myDoFloat
+        , ( className =? "firefox"   <&&>   title =? "Open File" )                                                  --> myDoFloat
+        , ( className =? "firefox"   <&&>   title =? "Library" )                                                    --> myDoFloat
+        , ( className =? "firefox"   <&&>   title =? "Choose Application" )                                         --> myDoFloat
         , ( className =? "Alacritty" <&&> ( title =? "firefox" <||> "firefox " ?^ title ) )                         --> doShift ( myWorkspaces !! 6 )
         
         -- Custom terminals
-        , ( className =? "Alacritty" <&&> ( title =? "cmus" <||> "cmus " ?^ title ) )                               --> doShift' "mus"
+        , ( className =? "Alacritty" <&&> ( title =? "cmus"      <||> "cmus "      ?^ title ) )                     --> doShift' "mus"
         , ( className =? "Alacritty" <&&> ( title =? "alacritty" <||> "alacritty " ?^ title ) )                     --> doShift ( myWorkspaces !! 6 )
 
         ] <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> manageSpawn
