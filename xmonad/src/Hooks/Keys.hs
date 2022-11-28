@@ -5,15 +5,12 @@ module Hooks.Keys   (
                     , keyUpEventHook
                     ) where
 
-
-import              XMonad
+import              XMonad   hiding (keys)
 
 import qualified    XMonad.Util.ExtensibleState as XS
 
 import              Data.Monoid
-import qualified    Data.Map as M  (Map, lookup)
-
-
+import qualified    Data.Map as M   (Map, lookup)
 
 
 data KeyState = Up | Down deriving (Eq, Read)
@@ -30,32 +27,32 @@ ifKey s x = (XS.get :: X KeyState)
 
 
 keyUpEventHook :: M.Map ( KeyMask, KeySym ) ( X () ) -> Event -> X All
-keyUpEventHook ks ev =
-    handleKeyUpEvent ev ks
+keyUpEventHook keys ev =
+    handleKeyUpEvent ev keys
  >> return (All True)
-
-
-handleKeyUpEvent :: Event -> M.Map ( KeyMask, KeySym ) ( X () ) -> X ()
-handleKeyUpEvent (KeyEvent {ev_event_type = t, ev_state = m, ev_keycode = code}) ks
-    | t == keyRelease =
-    withDisplay $ \dpy -> do
-        s  <- io $ keycodeToKeysym dpy code 0
-        mClean <- cleanMask m
-        userCodeDef () $ whenJust (M.lookup (mClean, s) ks) id
-handleKeyUpEvent _ _ = return ()
+    where
+        
+        handleKeyUpEvent :: Event -> M.Map ( KeyMask, KeySym ) ( X () ) -> X ()
+        handleKeyUpEvent (KeyEvent {ev_event_type = t, ev_state = m, ev_keycode = code}) ks
+            | t == keyRelease =
+            withDisplay $ \dpy -> do
+                k  <- io $ keycodeToKeysym dpy code 0
+                mClean <- cleanMask m
+                userCodeDef () $ whenJust (M.lookup (mClean, k) ks) id
+        handleKeyUpEvent _ _ = return ()
 
 
 keyDownEventHook :: M.Map ( KeyMask, KeySym ) ( X () ) -> Event -> X All
-keyDownEventHook ks ev =
-    handleKeyDownEvent ev ks
+keyDownEventHook keys ev =
+    handleKeyDownEvent ev keys
  >> return (All True)
+    where
 
-
-handleKeyDownEvent :: Event -> M.Map ( KeyMask, KeySym ) ( X () ) -> X ()
-handleKeyDownEvent (KeyEvent {ev_event_type = t, ev_state = m, ev_keycode = code}) ks
-    | t == keyPress =
-    withDisplay $ \dpy -> do
-        s  <- io $ keycodeToKeysym dpy code 0
-        mClean <- cleanMask m
-        userCodeDef () $ whenJust (M.lookup (mClean, s) ks) id
-handleKeyDownEvent _ _ = return ()
+        handleKeyDownEvent :: Event -> M.Map ( KeyMask, KeySym ) ( X () ) -> X ()
+        handleKeyDownEvent (KeyEvent {ev_event_type = t, ev_state = m, ev_keycode = code}) ks
+            | t == keyPress =
+            withDisplay $ \dpy -> do
+                s  <- io $ keycodeToKeysym dpy code 0
+                mClean <- cleanMask m
+                userCodeDef () $ whenJust (M.lookup (mClean, s) ks) id
+        handleKeyDownEvent _ _ = return ()

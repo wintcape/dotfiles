@@ -96,17 +96,17 @@ myWorkspaces = [ "vim","web","ful","mus","rec","doc","sys" ]
 mySWNConfig :: SWNConfig                    -- show workspace name
 mySWNConfig = def
     {
-      swn_font      = myFont ++ "pixelsize=148"
-    , swn_fade      = 1.0
-    , swn_bgcolor   = colorDarkGray
-    , swn_color     = colorWhite
+      swn_font = myFont++"pixelsize=148"
+    , swn_fade = 1.0
+    , swn_bgcolor = colorDarkGray
+    , swn_color = colorWhite
     }
 
 
 -- Layouts
 --
-myFullLayout        = noBorders . avoidStruts $ renamed [Replace "full"] Full
-myGridLayout        = avoidStruts $ myFullLayout ||| renamed [Replace "grid"] Grid
+myFullLayout = noBorders . avoidStruts $ renamed [Replace "full"] Full
+myGridLayout = avoidStruts $ myFullLayout ||| renamed [Replace "grid"] Grid
 myFullscreenLayout  = fullscreenFull $ myFullLayout ||| (noBorders $ Full)
 
 
@@ -216,68 +216,58 @@ myKeyBindings conf@(XConfig {XMonad.modMask = myModMask}) = mkKeymap conf $
     [
 
     -- Session 
-      ("M-<Escape>",    spawnOn "sys" $ myTerminal ++ " -e "
-                                     ++ myPath ++ "script/recompile.sh")    -- recompile and restart, or display error
-    , ("M-S-<Escape>",  io exitSuccess)                                     -- exit
-    , ("M-<F5>",        runInTerm' "Shutdown?" "" "shutdown -h now")        -- elevated: shutdown
-    , ("M-<F6>",        runInTerm' "Reboot?"   "" "reboot")                 -- elevated: reboot
+      ("M-<Escape>", spawnOn "sys" $  myTerminal ++ " -e "
+                                   ++ myPath ++ "script/recompile.sh")      -- recompile and restart, or display error
+    , ("M-S-<Escape>", io exitSuccess)                                      -- exit
+    , ("M-<F5>", runInTerm' "Shutdown?" "" "shutdown -h now")               -- elevated: shutdown
+    , ("M-<F6>", runInTerm' "Reboot?" "" "reboot")                          -- elevated: reboot
 
     -- Workspace navigation
-    , ("<KP_Insert>",   windows $ W.greedyView "vim")                       -- move focus to workspace n
-    , ("<KP_End>",      windows $ W.greedyView "web")
-    , ("<KP_Down>",     windows $ W.greedyView "ful")
-    , ("<KP_Next>",     windows $ W.greedyView "mus")
-    , ("<KP_Left>",     windows $ W.greedyView "rec")
-    , ("<KP_Begin>",    windows $ W.greedyView "doc")
-    , ("<KP_Right>",    windows $ W.greedyView "sys")
-    , ("M-<KP_Insert>", windows $ W.shift       "vim")                      -- shift focused window to workspace n
-    , ("M-<KP_End>",    windows $ W.shift       "web")
-    , ("M-<KP_Down>",   windows $ W.shift       "ful")
-    , ("M-<KP_Next>",   windows $ W.shift       "mus")
-    , ("M-<KP_Left>",   windows $ W.shift       "rec")
-    , ("M-<KP_Begin>",  windows $ W.shift       "doc")
-    , ("M-<KP_Right>",  windows $ W.shift       "sys")
+    , ("<KP_Insert>", windows $ W.greedyView "vim")                         -- move focus to workspace n
+    , ("<KP_End>", windows $ W.greedyView "web")
+    , ("<KP_Down>", windows $ W.greedyView "ful")
+    , ("<KP_Next>", windows $ W.greedyView "mus")
+    , ("<KP_Left>", windows $ W.greedyView "rec")
+    , ("<KP_Begin>", windows $ W.greedyView "doc")
+    , ("<KP_Right>", windows $ W.greedyView "sys")
+    , ("M-<KP_Insert>", windows $ W.shift "vim")                            -- shift focused window to workspace n
+    , ("M-<KP_End>", windows $ W.shift "web")
+    , ("M-<KP_Down>", windows $ W.shift "ful")
+    , ("M-<KP_Next>", windows $ W.shift "mus")
+    , ("M-<KP_Left>", windows $ W.shift "rec")
+    , ("M-<KP_Begin>", windows $ W.shift "doc")
+    , ("M-<KP_Right>", windows $ W.shift "sys")
 
     -- Current workspace
-    , ("M-S-<Space>",   refresh)                                            -- reset to default layout
-    , ("M-<Tab>",       windows W.focusDown)                                -- move focus to next window
-    , ("M--",           sendMessage Shrink)                                 -- shrink master window
-    , ("M-=",           sendMessage Expand)                                 -- expand master window
-    , ("M-q",           kill1)                                              -- kill current window
-    , ("M-S-q",         killAll)                                            -- kill all windows in current workspace
-    , ("M-t",           withFocused $ windows . W.sink)                     -- Push floating window back to tile
-    , ("M-S-t",         sinkAll)                                            -- Push ALL floating windows to tile
+    , ("M-S-<Space>", refresh)                                              -- reset to default layout
+    , ("M-<Tab>", windows W.focusDown)                                      -- move focus to next window
+    , ("M--", sendMessage Shrink)                                           -- shrink master window
+    , ("M-=", sendMessage Expand)                                           -- expand master window
+    , ("M-q", spawn "xkill")                                                        -- kill current window
+    , ("M-S-q", killAll)                                                    -- kill all windows in current workspace
+    , ("M-t", withFocused $ windows . W.sink)                               -- Push floating window back to tile
+    , ("M-S-t", sinkAll)                                                    -- Push ALL floating windows to tile
     
     -- Application spawning
-    , ("M-M1-<Return>", spawn          myTerminal)                          -- alacritty
-    , ("M-M1-e",        spawnOn "vim" $ myEditor')                          -- nvim
-    , ("M-M1-b",        spawn          myBrowser)                           -- firefox
-    , ("M-<F1>",        runInTerm' "Launch steam?"                          -- elevated: steam
-                                   (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
-                                   "steam")
-    , ("M-<F2>",        runInTerm' "Chroot steam?"                          -- elevated: steam-chroot
-                                   (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
-                                   "steam-chroot")
-    , ("M-<F3>",        runInTerm' "Unchroot steam?"                        -- elevated: steam-unchroot
-                                   (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
-                                   "steam-unchroot")
+    , ("M-M1-<Return>", spawn myTerminal)                                   -- alacritty
+    , ("M-M1-e", spawnOn "vim" $ myEditor')                                 -- nvim
+    , ("M-M1-b", spawn myBrowser)                                           -- firefox
+    , ("M-<F1>", runInTerm' "Launch steam?"                                 -- elevated: steam
+                            (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
+                            "steam")
+    , ("M-<F2>", runInTerm' "Chroot steam?"                                 -- elevated: steam-chroot
+                            (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
+                            "steam-chroot")
+    , ("M-<F3>", runInTerm' "Unchroot steam?"                               -- elevated: steam-unchroot
+                            (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
+                            "steam-unchroot")
 
     -- Prompt / Scratchpad
-    , ("M-<Return>",    namedScratchpadAction myScratchpads "sh")           -- toggle terminal
-    , ("M-z",           namedScratchpadAction myScratchpads "htop")         -- toggle htop
-    , ("M-S-z",         namedScratchpadAction myScratchpads "nvtop")        -- toggle nvtop
-    , ("M-m",           namedScratchpadAction myScratchpads "pulsemixer")   -- toggle pulsemixer
-    , ("M-c",           namedScratchpadAction myScratchpads "qalc")         -- toggle calculator
-    , ("M-S-<Return>",  terminalPrompt  myPromptConfig)                     -- launch run prompt
-    , ("M-C-m",         manPrompt       myPromptConfig 0 "doc")             -- launch manpage prompt
-    , ("M-C-s s",       searchPrompt    myPromptConfig myBrowser google)    -- search Google
-    , ("M-C-s a",       searchPrompt    myPromptConfig myBrowser duckduckgo)-- search DuckDuckGo
-    , ("M-C-s w",       searchPrompt    myPromptConfig myBrowser wikipedia) -- search Wikipedia
-    , ("M-C-s y",       searchPrompt    myPromptConfig myBrowser youtube)   -- search YouTube
-    , ("M-C-s d",       searchPrompt    myPromptConfig myBrowser dictionary)-- search dictionary
-    , ("M-C-s t",       searchPrompt    myPromptConfig myBrowser thesaurus) -- search thesaurus
-    
-    -- Audio controls
+    , ("M-<Return>", namedScratchpadAction myScratchpads "sh")              -- toggle terminal
+    , ("M-S-<Return>", terminalPrompt myPromptConfig)                       -- launch run prompt
+    , ("M-z", namedScratchpadAction myScratchpads "htop")                   -- toggle htop
+    , ("M-S-z", namedScratchpadAction myScratchpads "nvtop")                -- toggle nvtop
+    , ("M-m", namedScratchpadAction myScratchpads "pulsemixer")             -- toggle pulsemixer
     , ("M-<Page_Up>",   spawn "amixer -D pulse sset Master 5%+")            -- master device volume+
     , ("M-<Page_Down>", spawn "amixer -D pulse sset Master 5%-")            -- master device volume-
     , ("M-<Home>",      spawn "cmus-remote --volume +1%")                   -- cmus volume+

@@ -8,8 +8,6 @@ import XMonad.Prompt.Shell (getCommands, getShellCompl)
 import XMonad.Util.Run     (runInTerm)
 
 
-
-
 data Terminal = Terminal
 
 instance XPrompt Terminal where

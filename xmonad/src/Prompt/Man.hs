@@ -18,9 +18,7 @@ import qualified Control.Exception as E
 
 
 data Man = Man
-
-instance XPrompt Man where
-    showXPrompt Man = "man "
+instance XPrompt Man where showXPrompt Man = "man "
 
 
 manPrompt :: XPConfig -> ScreenId -> WorkspaceId -> X ()

@@ -2,7 +2,6 @@ module  Prompt.Search   (
                           searchPrompt
                         ) where
 
-
 import  XMonad
 import  XMonad.Prompt
 import  XMonad.Actions.Search   (Browser, SearchEngine(..), search)
