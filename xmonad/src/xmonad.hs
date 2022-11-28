@@ -243,7 +243,7 @@ myKeyBindings conf@(XConfig {XMonad.modMask = myModMask}) = mkKeymap conf $
     , ("M-<Tab>", windows W.focusDown)                                      -- move focus to next window
     , ("M--", sendMessage Shrink)                                           -- shrink master window
     , ("M-=", sendMessage Expand)                                           -- expand master window
-    , ("M-q", spawn "xkill")                                                        -- kill current window
+    , ("M-q", kill1)                                                        -- kill current window
     , ("M-S-q", killAll)                                                    -- kill all windows in current workspace
     , ("M-t", withFocused $ windows . W.sink)                               -- Push floating window back to tile
     , ("M-S-t", sinkAll)                                                    -- Push ALL floating windows to tile
