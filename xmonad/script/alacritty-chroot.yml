@@ -55,8 +55,8 @@ draw_bold_text_with_bright_colors: true
 colors:
  
   primary:
-    background: '0x000000'
-    foreground: '0xFF0000'
+    background: '0x000080'
+    foreground: '0xFFFFFF'
 
   normal:
     black:   '0x000000'

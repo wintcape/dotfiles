@@ -393,7 +393,7 @@ myManageHook = composeAll
         
         -- Minecraft
         , (className =? "Minecraft Launcher" <&&> title =? "Minecraft game output")                             --> doShift ( myWorkspaces !! 6 )
-        , (className =? "minecraft-launcher")                             --> doShift ( myWorkspaces !! 2 )
+        , (className =? "minecraft-launcher")                                                                   --> doShift ( myWorkspaces !! 2 )
         , "Minecraft" ?^ className                                                                              --> doShift ( myWorkspaces !! 2 )
         , (className =? "Alacritty" <&&> (title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title))   --> doShift ( myWorkspaces !! 6 )
 
@@ -403,11 +403,12 @@ myManageHook = composeAll
         , (className =? "Alacritty" <&&> (title =? "audacity" <||> "audacity " ?^ title))                       --> doShift ( myWorkspaces !! 6 )
         
         -- Steam
-        , className =? "Steam"                                                                                  --> doShift ( myWorkspaces !! 3 )
+        , className =? "Steam"                                                                                  --> doShift' ( myWorkspaces !! 2 )
+        , (className =? "Steam" <&&> title =? "Friends List")                                                   --> myDoFloat
         , (className =? "Alacritty" <&&> (title =? "steam" <||> "steam " ?^ title))                             --> doShift ( myWorkspaces !! 6 )
         , (className =? "Alacritty" <&&> (title =? "steam-chroot" <||> "steam-chroot " ?^ title))               --> doShift ( myWorkspaces !! 6 )
         , (className =? "Alacritty" <&&> (title =? "sudo steam-chroot" <||> "sudo steam-chroot " ?^ title))     --> doShift ( myWorkspaces !! 6 )
-        , className =? "csgo_linux64"                                                                           --> doShift ( myWorkspaces !! 3 )
+        , className =? "csgo_linux64"                                                                           --> doShift ( myWorkspaces !! 2 )
                                                                                                                  >> doSink
         
         -- Firefox
