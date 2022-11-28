@@ -104,7 +104,7 @@ mySWNConfig = def
 --
 myFullLayout = noBorders . avoidStruts $ renamed [Replace "full"] Full
 myGridLayout = avoidStruts $ myFullLayout ||| renamed [Replace "grid"] Grid
-myFullscreenLayout = fullscreenFull $ myFullLayout ||| (noBorders $ Full) ||| (avoidStruts $ renamed [Replace "grid"] Grid)
+myFullscreenLayout = fullscreenFull $ myFullLayout ||| (noBorders $ Full)
 
 
 -- Status bar (xmobar)
@@ -226,6 +226,10 @@ myKeyBindings conf@(XConfig {XMonad.modMask = myModMask}) = mkKeymap conf $
       ("M-<Escape>", spawnOn "sys" $  myTerminal ++ " -e "
                                    ++ myPath ++ "script/recompile.sh")      -- recompile and restart, or display error
     , ("M-S-<Escape>", io exitSuccess)                                      -- exit
+    , ("M-<F5>", spawnOn "sys" $ myTerminal                                 -- shutdown
+                              ++ " -e " ++ myPath ++ "script/shutdown.sh")
+    , ("M-<F6>", spawnOn "sys" $ myTerminal                                 -- reboot
+                              ++ " -e " ++ myPath ++ "script/reboot.sh")
 
     -- Workspace navigation
     , ("<KP_Insert>", windows $ W.greedyView "vim")                         -- move focus to workspace n
@@ -257,6 +261,15 @@ myKeyBindings conf@(XConfig {XMonad.modMask = myModMask}) = mkKeymap conf $
     , ("M-M1-<Return>", spawn myTerminal)                                   -- alacritty
     , ("M-M1-e", spawnOn "vim" $ myEditor')                                 -- nvim
     , ("M-M1-b", spawn myBrowser)                                           -- firefox
+    , ("M-<F1>", spawnOn "sys" $ myTerminal                                 -- sudo steam-chroot
+                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
+                              ++ " -e sudo steam-chroot")
+    , ("M-<F2>", spawnOn "sys" $ myTerminal                                 -- sudo steam-mount
+                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
+                              ++ " -e sudo steam-mount")
+    , ("M-<F3>", spawnOn "sys" $ myTerminal                                 -- sudo steam-umount
+                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
+                              ++ " -e sudo steam-umount")
 
     -- Prompt / Scratchpad
     , ("M-<Return>", namedScratchpadAction myScratchpads "sh")              -- toggle terminal
@@ -278,15 +291,6 @@ myKeyBindings conf@(XConfig {XMonad.modMask = myModMask}) = mkKeymap conf $
     , ("M-<Page_Down>", spawn "amixer -D pulse sset Master 5%-")            -- master device volume-
     , ("M-<Home>", spawn "cmus-remote --volume +1%")                        -- cmus volume+
     , ("M-<End>", spawn "cmus-remote --volume -1%")                         -- cmus volume-
-    , ("M-<F5>", spawnOn "sys" $ myTerminal                                 -- sudo steam-chroot
-                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
-                              ++ " -e sudo steam-chroot")
-    , ("M-<F6>", spawnOn "sys" $ myTerminal                                 -- sudo steam-mount
-                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
-                              ++ " -e sudo steam-mount")
-    , ("M-<F7>", spawnOn "sys" $ myTerminal                                 -- sudo steam-umount
-                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
-                              ++ " -e sudo steam-umount")
     , ("M-<F9>", spawn "cmus-remote --pause")                               -- cmus pause toggle
     , ("M-<F10>", spawn "cmus-remote --prev")                               -- cmus prev track
     , ("M-<F11>", spawn "cmus-remote --next")                               -- cmus next track
