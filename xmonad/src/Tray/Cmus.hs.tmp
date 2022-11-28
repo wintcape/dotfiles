@@ -1,0 +1,128 @@
+module Tray.Cmus    (
+                      CmusTray(..)
+                    ) where
+
+-- Base
+import              Xmobar
+
+-- (from XMonad)
+import              XMonad.Hooks.StatusBar.PP           (xmobarColor)
+import qualified    XMonad.Util.ExtensibleState as XS
+
+-- System
+import              System.Process                      (readProcess)
+
+-- Text processing
+import              Text.Printf                         (printf)
+import              Text.Regex.TDFA                     ((=~))
+
+-- Custom
+import              Color.Colors                        (colorBlack)
+
+
+-- Global
+--
+
+scrollV, scrollWidth :: Int
+scrollV = 3
+scrollWidth = 28
+
+
+-- ScrollCnt
+-- PersistentExtension to store a counter variable for rotating
+-- the banner (as Int)
+
+data ScrollCnt = ScrollCnt Int
+    deriving ( Read , Show )
+
+instance ExtensionClass ScrollCnt where
+    initialValue = ScrollCnt 0
+    extensionType = PersistentExtension
+
+
+-- ScrollOffset
+-- PersistentExtension to store the current banner offset (as Int)
+
+data ScrollOffset = ScrollOffset Int
+    deriving ( Read , Show )
+
+instance ExtensionClass ScrollOffset where
+    initialValue = ScrollOffset 0
+    extensionType = PersistentExtension
+
+
+-- Banner
+-- PersistentExtension to store the current banner (as String)
+
+data Banner = Banner String
+    deriving ( Read , Show )
+
+instance ExtensionClass Banner where
+    initialValue = Banner ""
+    extensionType = PersistentExtension
+
+
+-- CmusTray
+-- Exec plugin that prints info about a running cmus instance
+
+data CmusTray = CmusTray String Int Int
+    deriving ( Read , Show )
+
+instance Exec CmusTray where
+        alias   ( CmusTray _ _ _ )  =   "cmus"
+        rate    ( CmusTray _ _ r )  =   r
+        run     ( CmusTray c w _ )  =   case ( (readProcess "pgrep" [ "cmus" ] []) :: Bool ) of
+                                            False   ->  return
+                                            True    ->  readProcess "cmus-remote" [ "-Q" ] []
+                                                        >>= \raw ->
+                                                            let lines = splitOn "\n" raw
+                                                            in let status = drop $ length tagStatus $ head lines
+                                                                in case status of
+                                                                    "stopped"   ->  return
+                                                                        _       ->  let (
+                                                                                          artist
+                                                                                        , title
+                                                                                        ) = (
+                                                                                              getLineShortened tagArtist lines
+                                                                                            , getLineShortened tagTitle lines
+                                                                                            )
+                                                                                        in let  (
+                                                                                                  prettyStatus
+                                                                                                , prettyArtist
+                                                                                                , prettyTitle
+                                                                                                ) = (
+                                                                                                      case status of
+                                                                                                        "paused"    ->  "||"
+                                                                                                        "playing"   ->  "|>"
+                                                                                                            _       ->  "??"
+                                                                                                    , case artist of
+                                                                                                        Just a      ->  a
+                                                                                                        Nothing     ->  "?"
+                                                                                                    , case title of
+                                                                                                        Just a      ->  a
+                                                                                                        Nothing     ->  case getLineShortened tagFile lines of
+                                                                                                                            Just a  ->  a
+                                                                                                                            Nothing ->  "?"
+                                                                                                    )
+                                                                                                in let banner = sanitize "?" ( prettyArtist ++ " - " ++ prettyTitle )
+                                                                                                    in  XS.get :: Banner
+                                                                                                        >>= \bannerOld ->
+                                                                                                            if banner != bannerOld then
+                                                                                                                
+                                                                                                            
+            where
+
+                tagStatus   = "status "
+                tagArtist   = "tag artist "
+                tagTitle    = "tag title "
+                tagFile     = "file "
+
+                drop :: Int -> [ a ] -> Maybe [ a ]
+
+                lineWith :: a -> [ a ] -> Maybe a
+
+                lineWithout :: a -> [ a ] -> Maybe a
+                lineWithout x xs = drop $ length x $ lineWith x xs
+
+                sanitize :: Char -> Char -> [ Char ] -> [ Char ]
+                sanitize a b = map $ \c -> if isAscii c then c else a

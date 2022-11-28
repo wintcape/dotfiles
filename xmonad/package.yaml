@@ -1,0 +1,31 @@
+name: xmonad-vem
+version: 0.3
+
+ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints -O2 -j -dynamic
+
+dependencies:
+  - base
+  - containers
+  - directory
+  - filepath
+  - process
+  - regex-tdfa
+  - utf8-string
+  - unix
+  - xmonad >= 0.17
+  - xmonad-contrib >= 0.17
+  - xmobar
+
+source-dirs:
+  - src
+
+executables:
+  xmonad:
+    main: xmonad.hs
+    dependencies:
+      - xmonad
+      - X11 >= 1.10
+  xmobar:
+    main: xmobar.hs
+    dependencies:
+      - xmobar

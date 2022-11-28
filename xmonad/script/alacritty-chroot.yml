@@ -1,0 +1,204 @@
+env:
+    TERM: alacritty
+
+
+window:
+
+  dimensions:
+    columns: 0
+    lines: 0
+  
+  opacity: 1.0
+  
+  padding:
+    x: 6
+    y: 6
+  
+  decorations: none
+
+
+scrolling:
+  history: 1000
+  multiplier: 1
+  faux_multiplier: 1
+  auto_scroll: true
+
+
+tabspaces: 4
+
+
+font:
+
+  normal:
+    family: PxPlus IBM VGA 8x16
+  bold:
+    family: PxPlus IBM VGA 8x16
+  italic:
+    family: PxPlus IBM VGA 8x16
+  
+  size: 18
+  
+  offset:
+    x: 0
+    y: 0
+  glyph_offset:
+    x: 0
+    y: 0
+
+  scale_with_dpi: true
+
+
+render_timer: false
+draw_bold_text_with_bright_colors: true
+
+
+colors:
+ 
+  primary:
+    background: '0x000000'
+    foreground: '0xFF0000'
+
+  normal:
+    black:   '0x000000'
+    red:     '0x800000'
+    green:   '0x008000'
+    yellow:  '0x808000'
+    blue:    '0x000080'
+    magenta: '0x800080'
+    cyan:    '0x008080'
+    white:   '0x808080'
+
+  bright:
+    black:   '0x303030'
+    red:     '0xFF0000'
+    green:   '0x00FF00'
+    yellow:  '0xFFFF00'
+    blue:    '0x0000FF'
+    magenta: '0xFF00FF'
+    cyan:    '0x00FFFF'
+    white:   '0xFFFFFF'
+
+
+# Mouse bindings
+#
+# Available fields:
+#   - mouse
+#   - action
+#   - mods (optional)
+#
+# Values for `mouse`:
+#   - Middle
+#   - Left
+#   - Right
+#   - Numeric identifier such as `5`
+#
+# All available `mods` and `action` values are documented in the key binding
+# section.
+mouse_bindings:
+  - { mouse: Middle, action: PasteSelection }
+
+
+mouse:
+  double_click: { threshold: 300 }
+  triple_click: { threshold: 300 }
+
+  hide_when_typing: false
+
+
+selection:
+  semantic_escape_chars: ",│`|:\"' ()[]{}<>"
+  save_to_clipboard: false
+
+
+dynamic_title: true
+
+
+cursor:
+  style: Block
+  unfocused_hollow: true
+
+
+live_config_reload: true
+
+
+shell:
+  program: /bin/bash
+
+
+# Key bindings
+#
+# Key bindings are specified as a list of objects. Each binding will specify
+# a key and modifiers required to trigger it, terminal modes where the binding
+# is applicable, and what should be done when the key binding fires. It can
+# either send a byte sequnce to the running application (`chars`), execute
+# a predefined action (`action`) or fork and execute a specified command plus
+# arguments (`command`).
+#
+# Example:
+#   `- { key: V, mods: Command, action: Paste }`
+#
+# Available fields:
+#   - key
+#   - mods (optional)
+#   - chars | action | command (exactly one required)
+#   - mode (optional)
+#
+# Values for `key`:
+#   - `A` -> `Z`
+#   - `F1` -> `F12`
+#   - `Key1` -> `Key0`
+#
+#   A full list with available key codes can be found here:
+#   https://docs.rs/glutin/*/glutin/enum.VirtualKeyCode.html#variants
+#
+#   Instead of using the name of the keys, the `key` field also supports using
+#   the scancode of the desired key. Scancodes have to be specified as a
+#   decimal number.
+#   This command will allow you to display the hex scancodes for certain keys:
+#     `showkey --scancodes`
+#
+# Values for `mods`:
+#   - Command
+#   - Control
+#   - Shift
+#   - Alt
+#
+#   Multiple `mods` can be combined using `|` like this: `mods: Control|Shift`.
+#   Whitespace and capitalization is relevant and must match the example.
+#
+# Values for `chars`:
+#   The `chars` field writes the specified string to the terminal. This makes
+#   it possible to pass escape sequences.
+#   To find escape codes for bindings like `PageUp` ("\x1b[5~"), you can run
+#   the command `showkey -a` outside of tmux.
+#   Note that applications use terminfo to map escape sequences back to
+#   keys. It is therefore required to update the terminfo when
+#   changing an escape sequence.
+#
+# Values for `action`:
+#   - Paste
+#   - PasteSelection
+#   - Copy
+#   - IncreaseFontSize
+#   - DecreaseFontSize
+#   - ResetFontSize
+#   - ScrollPageUp
+#   - ScrollPageDown
+#   - ScrollToTop
+#   - ScrollToBottom
+#   - ClearHistory
+#   - Hide
+#   - Quit
+#
+# Values for `command`:
+#   The `command` field must be a map containing a `program` string and
+#   an `args` array of command line parameter strings.
+#
+#   Example:
+#       `command: { program: "alacritty", args: ["-e", "vttest"] }`
+#
+# Values for `mode`:
+#   - ~AppCursor
+#   - AppCursor
+#   - ~AppKeypad
+#   - AppKeypad
