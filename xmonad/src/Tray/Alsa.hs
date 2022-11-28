@@ -2,21 +2,14 @@ module Tray.Alsa    (
                       AlsaTray(..)
                     ) where
 
--- Base
 import  Xmobar
-
--- (from XMonad)
 import  XMonad.Hooks.StatusBar.PP   (xmobarColor)
-
--- System
 import  System.Process              (readProcess)
-
--- Text processing
 import  Text.Printf                 (printf)
 import  Text.Regex.TDFA             ((=~))
-
--- Custom
 import  Color.Colors                (colorBlack)
+
+
 
 
 data AlsaTray = AlsaTray String String Int

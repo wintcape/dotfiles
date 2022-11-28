@@ -2,11 +2,12 @@ module  Prompt.Terminal (
                           terminalPrompt
                         ) where
 
+import XMonad
+import XMonad.Prompt
+import XMonad.Prompt.Shell (getCommands, getShellCompl)
+import XMonad.Util.Run     (runInTerm)
 
-import  XMonad
-import  XMonad.Prompt
-import  XMonad.Prompt.Shell (getCommands, getShellCompl)
-import  XMonad.Util.Run     (runInTerm)
+
 
 
 data Terminal = Terminal

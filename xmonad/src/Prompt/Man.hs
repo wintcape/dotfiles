@@ -2,7 +2,6 @@ module Prompt.Man   (
                       manPrompt
                     ) where
 
-
 import XMonad
 import XMonad.Prelude
 import XMonad.Prompt

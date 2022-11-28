@@ -2,15 +2,14 @@
 
 ################################################################################
 
-SRC_DIR=$HOME/.config/xmonad
+LOG=$HOME/.config/xmonad/.log
 
 ################################################################################
-
 FAIL=0
-xmonad --recompile 2>$SRC_DIR/.log || FAIL=1
-if [ $FAIL == 1 ]
+xmonad --recompile 2>$LOG || FAIL=1
+if [ $FAIL == 0 ]
 then
-    nvim $SRC_DIR/.log
-else
     xmonad --restart
+else
+    nvim $LOG
 fi

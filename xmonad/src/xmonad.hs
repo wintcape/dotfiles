@@ -49,6 +49,9 @@ import              XMonad.Util.NamedScratchpad
 import              XMonad.Util.SpawnOnce           (spawnOnOnce)
 import qualified    XMonad.Util.ExtensibleState as XS
 
+-- Custom: Util
+import              Util.RunElevated                (runInTerm', runInTerm'')
+
 -- System
 import              System.Exit
 
@@ -93,18 +96,18 @@ myWorkspaces = [ "vim","web","ful","mus","rec","doc","sys" ]
 mySWNConfig :: SWNConfig                    -- show workspace name
 mySWNConfig = def
     {
-      swn_font = myFont++"pixelsize=148"
-    , swn_fade = 1.0
-    , swn_bgcolor = colorDarkGray
-    , swn_color = colorWhite
+      swn_font      = myFont ++ "pixelsize=148"
+    , swn_fade      = 1.0
+    , swn_bgcolor   = colorDarkGray
+    , swn_color     = colorWhite
     }
 
 
 -- Layouts
 --
-myFullLayout = noBorders . avoidStruts $ renamed [Replace "full"] Full
-myGridLayout = avoidStruts $ myFullLayout ||| renamed [Replace "grid"] Grid
-myFullscreenLayout = fullscreenFull $ myFullLayout ||| (noBorders $ Full)
+myFullLayout        = noBorders . avoidStruts $ renamed [Replace "full"] Full
+myGridLayout        = avoidStruts $ myFullLayout ||| renamed [Replace "grid"] Grid
+myFullscreenLayout  = fullscreenFull $ myFullLayout ||| (noBorders $ Full)
 
 
 -- Status bar (xmobar)
@@ -139,48 +142,38 @@ myScratchpads =
     , NS "pulsemixer" spawnPulsemixer findPulsemixer managePulsemixer
     ]
     where
-
-        -- (?^)
-        -- Returns True if x isPrefixOf q
-        (?^) :: (Eq a, Functor m) => [a] -> m [a] -> m Bool
-        x ?^ q = fmap (x `isPrefixOf`) q
-        
-
         -- Terminal on demand
-        spawnTerminal = myTerminal ++ " --title 'Terminal on Demand!'"
-        findTerminal = title =? "Terminal on Demand!"
-        manageTerminal = customFloating $ W.RationalRect left top width height
-            where               -- centered floating layout
+        spawnTerminal   = myTerminal ++ " --title 'Terminal on Demand!'"
+        findTerminal    = title =? "Terminal on Demand!"
+        manageTerminal  = customFloating $ W.RationalRect left top width height
+            where                        -- centered floating layout
                 width = 0.9
                 height = 0.9
                 left = 0.05
-                top = 0.05
-       
+                top = 0.05 
         -- Resource monitor
-        spawnHtop = myTerminal ++ " --title 'htop' -e htop"
-        findHtop = title =? "htop"
-        manageHtop = customFloating $ W.RationalRect left top width height
+        spawnHtop   = myTerminal ++ " --title 'htop' -e htop"
+        findHtop    = title =? "htop"
+        manageHtop  = customFloating $ W.RationalRect left top width height
             where
                 width = 1.0
                 height = 0.5
                 left = 0
                 top = 0.5 
-
         -- Calculator
-        spawnCalculator = "qalculate-gtk"
-        findCalculator = className =? "Qalculate-gtk"
-        manageCalculator = customFloating $ W.RationalRect left top width height
-            where               -- centered floating layout
+        spawnCalculator     = "qalculate-gtk"
+        findCalculator      = className =? "Qalculate-gtk"
+        manageCalculator    = customFloating $ W.RationalRect left top width height
+            where                            -- centered floating layout
                 width = 0.5
                 height = 0.5
                 left = 0.25
                 top = 0.25
-        
         -- Audio controller 
-        spawnPulsemixer = myTerminal ++ " --title 'pulsemixer' -e pulsemixer"
-        findPulsemixer = title =? "pulsemixer"
-        managePulsemixer = customFloating $ W.RationalRect left top width height
-            where               -- right floating layout
+        spawnPulsemixer     = myTerminal ++ " --title 'pulsemixer' -e pulsemixer"
+        findPulsemixer      = title =? "pulsemixer"
+        managePulsemixer    = customFloating $ W.RationalRect left top width height
+            where                            -- right floating layout
                 width = 1.0
                 height = 0.2
                 left = 0
@@ -223,83 +216,81 @@ myKeyBindings conf@(XConfig {XMonad.modMask = myModMask}) = mkKeymap conf $
     [
 
     -- Session 
-      ("M-<Escape>", spawnOn "sys" $  myTerminal ++ " -e "
-                                   ++ myPath ++ "script/recompile.sh")      -- recompile and restart, or display error
-    , ("M-S-<Escape>", io exitSuccess)                                      -- exit
-    , ("M-<F5>", spawnOn "sys" $ myTerminal                                 -- shutdown
-                              ++ " -e " ++ myPath ++ "script/shutdown.sh")
-    , ("M-<F6>", spawnOn "sys" $ myTerminal                                 -- reboot
-                              ++ " -e " ++ myPath ++ "script/reboot.sh")
+      ("M-<Escape>",    spawnOn "sys" $ myTerminal ++ " -e "
+                                     ++ myPath ++ "script/recompile.sh")    -- recompile and restart, or display error
+    , ("M-S-<Escape>",  io exitSuccess)                                     -- exit
+    , ("M-<F5>",        runInTerm' "Shutdown?" "" "shutdown -h now")        -- elevated: shutdown
+    , ("M-<F6>",        runInTerm' "Reboot?"   "" "reboot")                 -- elevated: reboot
 
     -- Workspace navigation
-    , ("<KP_Insert>", windows $ W.greedyView "vim")                         -- move focus to workspace n
-    , ("<KP_End>", windows $ W.greedyView "web")
-    , ("<KP_Down>", windows $ W.greedyView "ful")
-    , ("<KP_Next>", windows $ W.greedyView "mus")
-    , ("<KP_Left>", windows $ W.greedyView "rec")
-    , ("<KP_Begin>", windows $ W.greedyView "doc")
-    , ("<KP_Right>", windows $ W.greedyView "sys")
-    , ("M-<KP_Insert>", windows $ W.shift "vim")                            -- shift focused window to workspace n
-    , ("M-<KP_End>", windows $ W.shift "web")
-    , ("M-<KP_Down>", windows $ W.shift "ful")
-    , ("M-<KP_Next>", windows $ W.shift "mus")
-    , ("M-<KP_Left>", windows $ W.shift "rec")
-    , ("M-<KP_Begin>", windows $ W.shift "doc")
-    , ("M-<KP_Right>", windows $ W.shift "sys")
+    , ("<KP_Insert>",   windows $ W.greedyView "vim")                       -- move focus to workspace n
+    , ("<KP_End>",      windows $ W.greedyView "web")
+    , ("<KP_Down>",     windows $ W.greedyView "ful")
+    , ("<KP_Next>",     windows $ W.greedyView "mus")
+    , ("<KP_Left>",     windows $ W.greedyView "rec")
+    , ("<KP_Begin>",    windows $ W.greedyView "doc")
+    , ("<KP_Right>",    windows $ W.greedyView "sys")
+    , ("M-<KP_Insert>", windows $ W.shift       "vim")                      -- shift focused window to workspace n
+    , ("M-<KP_End>",    windows $ W.shift       "web")
+    , ("M-<KP_Down>",   windows $ W.shift       "ful")
+    , ("M-<KP_Next>",   windows $ W.shift       "mus")
+    , ("M-<KP_Left>",   windows $ W.shift       "rec")
+    , ("M-<KP_Begin>",  windows $ W.shift       "doc")
+    , ("M-<KP_Right>",  windows $ W.shift       "sys")
 
     -- Current workspace
-    , ("M-S-<Space>", refresh)                                              -- reset to default layout
-    , ("M-<Tab>", windows W.focusDown)                                      -- move focus to next window
-    , ("M--", sendMessage Shrink)                                           -- shrink master window
-    , ("M-=", sendMessage Expand)                                           -- expand master window
-    , ("M-q", kill1)                                                        -- kill current window
-    , ("M-S-q", killAll)                                                    -- kill all windows in current workspace
-    , ("M-t", withFocused $ windows . W.sink)                               -- Push floating window back to tile
-    , ("M-S-t", sinkAll)                                                    -- Push ALL floating windows to tile
+    , ("M-S-<Space>",   refresh)                                            -- reset to default layout
+    , ("M-<Tab>",       windows W.focusDown)                                -- move focus to next window
+    , ("M--",           sendMessage Shrink)                                 -- shrink master window
+    , ("M-=",           sendMessage Expand)                                 -- expand master window
+    , ("M-q",           kill1)                                              -- kill current window
+    , ("M-S-q",         killAll)                                            -- kill all windows in current workspace
+    , ("M-t",           withFocused $ windows . W.sink)                     -- Push floating window back to tile
+    , ("M-S-t",         sinkAll)                                            -- Push ALL floating windows to tile
     
     -- Application spawning
-    , ("M-M1-<Return>", spawn myTerminal)                                   -- alacritty
-    , ("M-M1-e", spawnOn "vim" $ myEditor')                                 -- nvim
-    , ("M-M1-b", spawn myBrowser)                                           -- firefox
-    , ("M-<F1>", spawnOn "sys" $ myTerminal                                 -- sudo steam-chroot
-                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
-                              ++ " -e sudo steam-chroot")
-    , ("M-<F2>", spawnOn "sys" $ myTerminal                                 -- sudo steam-mount
-                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
-                              ++ " -e sudo steam-mount")
-    , ("M-<F3>", spawnOn "sys" $ myTerminal                                 -- sudo steam-umount
-                              ++ " --config-file " ++ myPath ++ "script/alacritty-chroot.yml"
-                              ++ " -e sudo steam-umount")
+    , ("M-M1-<Return>", spawn          myTerminal)                          -- alacritty
+    , ("M-M1-e",        spawnOn "vim" $ myEditor')                          -- nvim
+    , ("M-M1-b",        spawn          myBrowser)                           -- firefox
+    , ("M-<F1>",        runInTerm' "Launch steam?"                          -- elevated: steam
+                                   (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
+                                   "steam")
+    , ("M-<F2>",        runInTerm' "Chroot steam?"                          -- elevated: steam-chroot
+                                   (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
+                                   "steam-chroot")
+    , ("M-<F3>",        runInTerm' "Unchroot steam?"                        -- elevated: steam-unchroot
+                                   (" --config-file " ++ myPath ++ "script/alacritty-chroot.yml")
+                                   "steam-unchroot")
 
     -- Prompt / Scratchpad
-    , ("M-<Return>", namedScratchpadAction myScratchpads "sh")              -- toggle terminal
-    , ("M-S-<Return>", terminalPrompt myPromptConfig)                       -- launch run prompt
-    , ("M-z", namedScratchpadAction myScratchpads "htop")                   -- toggle htop
-    , ("M-S-z", namedScratchpadAction myScratchpads "nvtop")                -- toggle nvtop
-    , ("M-m", namedScratchpadAction myScratchpads "pulsemixer")             -- toggle pulsemixer
-    , ("M-c", namedScratchpadAction myScratchpads "qalc")                   -- toggle calculator
-    , ("M-C-m", manPrompt myPromptConfig 0 "doc")                           -- launch manpage prompt
-    , ("M-C-s s", searchPrompt myPromptConfig myBrowser google)             -- search Google
-    , ("M-C-s a", searchPrompt myPromptConfig myBrowser duckduckgo)         -- search DuckDuckGo
-    , ("M-C-s w", searchPrompt myPromptConfig myBrowser wikipedia)          -- search Wikipedia
-    , ("M-C-s y", searchPrompt myPromptConfig myBrowser youtube)            -- search YouTube
-    , ("M-C-s d", searchPrompt myPromptConfig myBrowser dictionary)         -- search dictionary
-    , ("M-C-s t", searchPrompt myPromptConfig myBrowser thesaurus)          -- search thesaurus
+    , ("M-<Return>",    namedScratchpadAction myScratchpads "sh")           -- toggle terminal
+    , ("M-z",           namedScratchpadAction myScratchpads "htop")         -- toggle htop
+    , ("M-S-z",         namedScratchpadAction myScratchpads "nvtop")        -- toggle nvtop
+    , ("M-m",           namedScratchpadAction myScratchpads "pulsemixer")   -- toggle pulsemixer
+    , ("M-c",           namedScratchpadAction myScratchpads "qalc")         -- toggle calculator
+    , ("M-S-<Return>",  terminalPrompt  myPromptConfig)                     -- launch run prompt
+    , ("M-C-m",         manPrompt       myPromptConfig 0 "doc")             -- launch manpage prompt
+    , ("M-C-s s",       searchPrompt    myPromptConfig myBrowser google)    -- search Google
+    , ("M-C-s a",       searchPrompt    myPromptConfig myBrowser duckduckgo)-- search DuckDuckGo
+    , ("M-C-s w",       searchPrompt    myPromptConfig myBrowser wikipedia) -- search Wikipedia
+    , ("M-C-s y",       searchPrompt    myPromptConfig myBrowser youtube)   -- search YouTube
+    , ("M-C-s d",       searchPrompt    myPromptConfig myBrowser dictionary)-- search dictionary
+    , ("M-C-s t",       searchPrompt    myPromptConfig myBrowser thesaurus) -- search thesaurus
     
     -- Audio controls
-    , ("M-<Page_Up>", spawn "amixer -D pulse sset Master 5%+")              -- master device volume+
+    , ("M-<Page_Up>",   spawn "amixer -D pulse sset Master 5%+")            -- master device volume+
     , ("M-<Page_Down>", spawn "amixer -D pulse sset Master 5%-")            -- master device volume-
-    , ("M-<Home>", spawn "cmus-remote --volume +1%")                        -- cmus volume+
-    , ("M-<End>", spawn "cmus-remote --volume -1%")                         -- cmus volume-
-    , ("M-<F9>", spawn "cmus-remote --pause")                               -- cmus pause toggle
-    , ("M-<F10>", spawn "cmus-remote --prev")                               -- cmus prev track
-    , ("M-<F11>", spawn "cmus-remote --next")                               -- cmus next track
-    , ("M-<Pause>", spawn "amixer set Master toggle")                       -- master alsa mute toggle
+    , ("M-<Home>",      spawn "cmus-remote --volume +1%")                   -- cmus volume+
+    , ("M-<End>",       spawn "cmus-remote --volume -1%")                   -- cmus volume-
+    , ("M-<F9>",        spawn "cmus-remote --pause")                        -- cmus pause toggle
+    , ("M-<F10>",       spawn "cmus-remote --prev")                         -- cmus prev track
+    , ("M-<F11>",       spawn "cmus-remote --next")                         -- cmus next track
+    , ("M-<Pause>",     spawn "amixer set Master toggle")                   -- master alsa mute toggle
    
     -- Dummy entries required for XMonad key detection
     -- (see myKeyUpBindings, myKeyDownBindings)
     , ("M-<Space>", return ())
-    , ("M-`", return ())
+    , ("M-`",       return ())
 
     ]
 
@@ -328,14 +319,14 @@ myMouseBindings _ = M.fromList $
 
       ((myModMask, 1), (\w -> focus w
                            >> mouseMoveWindow w
-                           >> windows W.shiftMaster))    -- M+LCLICK: position window
+                           >> windows W.shiftMaster))                       -- M+LCLICK: position window
     , ((myModMask, 3), (\w -> focus w
                            >> mouseResizeWindow w
-                           >> windows W.shiftMaster))    -- M+RCLICK: resize window
+                           >> windows W.shiftMaster))                       -- M+RCLICK: resize window
     , ((myModMask, 2), (\w -> focus w
-                           >> windows W.shiftMaster))    -- M+MOUSE3: bring to front
+                           >> windows W.shiftMaster))                       -- M+MOUSE3: bring to front
             
-            -- Soundfx
+    -- Soundfx
     , ((0, 9), const $ spawn "cmus-remote --queue --file \"$(ls archive-i/soundpad/* | shuf -n 1)\"")
     , ((0, 8), const $ spawn "cmus-remote --queue --stop")
             
@@ -376,7 +367,7 @@ myManageHook = composeAll
 
         -- Thunar
         , className =? "Thunar"                                                                                 --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
-        , (className =? "Thunar" <&&> title =? "Create New Folder")                                             --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
+        , (className =? "Thunar"    <&&>  title =? "Create New Folder")                                             --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
         , (className =? "Alacritty" <&&> (title =? "thunar" <||> "thunar " ?^ title))                           --> doShift ( myWorkspaces !! 6 )
 
         -- sys workspace
@@ -392,9 +383,9 @@ myManageHook = composeAll
         , (className =? "Alacritty" <&&> (title =? "obs" <||> "obs " ?^ title))                                 --> doShift ( myWorkspaces !! 6 )
         
         -- Minecraft
-        , (className =? "Minecraft Launcher" <&&> title =? "Minecraft game output")                             --> doShift ( myWorkspaces !! 6 )
-        , (className =? "minecraft-launcher")                                                                   --> doShift ( myWorkspaces !! 2 )
+        , (className =? "minecraft-launcher" <||> className =? "Minecraft Launcher")                            --> doShift ( myWorkspaces !! 2 )
         , "Minecraft" ?^ className                                                                              --> doShift ( myWorkspaces !! 2 )
+        , (className =? "Minecraft Launcher" <&&> title =? "Minecraft game output")                             --> doShift ( myWorkspaces !! 6 )
         , (className =? "Alacritty" <&&> (title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title))   --> doShift ( myWorkspaces !! 6 )
 
         -- Audacity
@@ -403,11 +394,11 @@ myManageHook = composeAll
         , (className =? "Alacritty" <&&> (title =? "audacity" <||> "audacity " ?^ title))                       --> doShift ( myWorkspaces !! 6 )
         
         -- Steam
-        , className =? "Steam"                                                                                  --> doShift' ( myWorkspaces !! 2 )
-        , (className =? "Steam" <&&> title =? "Friends List")                                                   --> myDoFloat
-        , (className =? "Alacritty" <&&> (title =? "steam" <||> "steam " ?^ title))                             --> doShift ( myWorkspaces !! 6 )
-        , (className =? "Alacritty" <&&> (title =? "steam-chroot" <||> "steam-chroot " ?^ title))               --> doShift ( myWorkspaces !! 6 )
-        , (className =? "Alacritty" <&&> (title =? "sudo steam-chroot" <||> "sudo steam-chroot " ?^ title))     --> doShift ( myWorkspaces !! 6 )
+        , className =? "Steam"                                                                                  --> liftX (windows $ onlyOnScreen 1 "ful")
+                                                                                                                 >> liftX (windows $ onlyOnScreen 2 "sys")
+                                                                                                                 >> doShift ( myWorkspaces !! 2 )
+        , (className =? "Steam"     <&&> title =? "Friends List")                                               --> doHideIgnore
+        , (className =? "Steam"     <&&> title =? "Steam - News")                                               --> doHideIgnore
         , className =? "csgo_linux64"                                                                           --> doShift ( myWorkspaces !! 2 )
                                                                                                                  >> doSink
         
@@ -446,7 +437,7 @@ myStartupHook :: X ()
 myStartupHook = 
     (windows $ onlyOnScreen 0 "sys")
  >> (windows $ onlyOnScreen 1 "vim")
- >> (spawnOnOnce "sys" $ myTerminal ++ " -e " ++ "sudo " ++ myEditor)
+ >> (runInTerm'' "Launch sudo nvim?" "" myEditor)
  >> (spawnOnOnce "vim" $ myEditor')
 
 
