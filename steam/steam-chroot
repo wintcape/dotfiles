@@ -1,0 +1,37 @@
+#!/bin/sh
+
+ARCH=linux64
+DIR=/opt/steam
+
+# ========== DO NOT MODIFY BELOW THIS LINE ========== #
+
+# Required for chroot
+mount --verbose --types proc    /proc                           $DIR/proc
+mount --verbose --rbind         /sys                            $DIR/sys
+mount --verbose --make-rslave   $DIR/sys
+mount --verbose --rbind         /dev                            $DIR/dev
+mount --verbose --make-rslave   $DIR/dev
+mount --verbose --rbind         /run                            $DIR/run
+mount --verbose --make-rslave   $DIR/run
+mount --verbose --rbind         /var/db/repos/gentoo            $DIR/var/db/repos/gentoo
+mount --verbose --make-rslave   $DIR/var/db/repos/gentoo
+
+# Required for X
+cp                              /home/wintcape/.Xauthority      $DIR/home/steam/.Xauthority
+ln    --force                   /tmp/.X11-unix/X0               $DIR/tmp/.X11-unix/X0
+
+
+# Required for pulseaudio
+mount --verbose --rbind         /tmp                            $DIR/tmp
+mount --verbose --make-rslave   $DIR/tmp
+mount --verbose --rbind         /var/lib/dbus                   $DIR/var/lib/dbus
+mount --verbose --make-rslave   $DIR/var/lib/dbus
+mount --verbose --rbind         $XDG_RUNTIME_DIR                $DIR$XDG_RUNTIME_DIR
+mount --verbose --make-rslave   $DIR$XDG_RUNTIME_DIR
+mount --verbose --rbind         /home/wintcape/.pulse           $DIR/home/steam/.pulse
+mount --verbose --make-rslave   $DIR/home/steam/.pulse
+mount --verbose --rbind         /home/wintcape/.config/pulse    $DIR/home/steam/.config/pulse
+mount --verbose --make-rslave   $DIR/home/steam/.config/pulse
+
+$ARCH chroot $DIR /bin/bash
+source /etc/profile 

@@ -8,6 +8,8 @@ module Config.Prelude   (
                         ) where
 
 
+
+
 myPath :: String
 myPath = "/home/wintcape/.config/xmonad/"
 

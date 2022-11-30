@@ -11,6 +11,8 @@ module Color.Colors (
                     ) where
 
 
+
+
 colorBlack :: String
 colorBlack = "#000000"
 

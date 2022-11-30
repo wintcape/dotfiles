@@ -2,14 +2,20 @@ module  Prompt.Terminal (
                           terminalPrompt
                         ) where
 
+-- Base
 import XMonad
+
+-- Prompt
 import XMonad.Prompt
 import XMonad.Prompt.Shell (getCommands, getShellCompl)
+
+-- Util
 import XMonad.Util.Run     (runInTerm)
 
 
-data Terminal = Terminal
 
+
+data Terminal = Terminal
 instance XPrompt Terminal where
     showXPrompt Terminal  = ""
     completionToCommand _ = escape
@@ -18,7 +24,7 @@ instance XPrompt Terminal where
             escape []       = ""
             escape (x:xs)
                 | isSpecialChar x = '\\' : x : escape xs
-                | otherwise       = x : escape xs
+                | otherwise       =        x : escape xs
                 where
                     isSpecialChar :: Char -> Bool
                     isSpecialChar =  flip elem " &\\@\"'#?$*()[]{};"
@@ -26,7 +32,9 @@ instance XPrompt Terminal where
 
 terminalPrompt :: XPConfig -> X ()
 terminalPrompt c =
-    io getCommands
+        io getCommands
     >>= \cmds ->
-        mkXPrompt Terminal c ( getShellCompl cmds $ searchPredicate c ) ( \input ->
-            runInTerm ( "--title \"" ++ input ++ "\"" ) input )
+            mkXPrompt Terminal c
+            ( getShellCompl cmds $ searchPredicate c )
+            ( \input ->
+                    runInTerm ( "--title \"" ++ input ++ "\"" ) input )

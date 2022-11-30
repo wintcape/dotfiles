@@ -3,7 +3,7 @@
 
 import          Config.Prelude
 
--- Xmobar: Base
+-- Base
 import          Xmobar
 
 -- XMonad
@@ -28,29 +28,28 @@ myCommands =
     [
       Run UnsafeXMonadLog
     , Run $ Cpu
-        [ "--template",     "<total>%"
-        , "--Low",          "1"
-        , "--High",         "50"
-        , "--high",         colorRed ++ "," ++ colorGreen
+        [ "--template" , "<total>%"
+        , "--Low"      , "1"
+        , "--High"     , "50"
+        , "--high"     , colorRed ++ "," ++ colorGreen
         ] ( 1 `seconds` )
     , Run $ Memory
-        [ "--template",     "<usedratio>%"
-        , "--Low",          "1"
-        , "--High",         "50"
-        , "--high",         colorRed ++ "," ++ colorGray 
+        [ "--template" , "<usedratio>%"
+        , "--Low"      , "1"
+        , "--High"     , "50"
+        , "--high"     , colorRed ++ "," ++ colorGray 
         ] ( 1 `seconds` )
     , Run $ Network "enp8s0"
-        [ "--template",     "↓<rx>kB↑<tx>kB"
-        , "--Low",          "1000"
-        , "--High",         "10000"
-        , "--low",          colorWhite ++ "," ++ colorBlue
+        [ "--template" , "↓<rx>kB↑<tx>kB"
+        , "--Low"      , "1000"
+        , "--High"     , "10000"
+        , "--low"      , colorWhite ++ "," ++ colorBlue
         ] ( 1 `seconds` )
     , Run $ Date "%a %b %_d %Y %H:%M:%S" "date" ( 1 `seconds` )
     , Run $ AlsaTray colorGreen colorDarkGray 1
     , Run $ Com ( myPath ++ "script/xmobar-tray-cmus.sh" ) [] "cmus" 1
     ]
     where
-
         seconds :: Int -> Int
         seconds = (* 10)
 

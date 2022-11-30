@@ -1,0 +1,18 @@
+#!/bin/sh
+
+ARCH=linux64
+DIR=/usr/local/steam64
+
+# ========== DO NOT MODIFY BELOW THIS LINE ========== #
+
+kill $(pgrep steam-chroot)
+umount --verbose $DIR/proc
+umount --verbose $DIR/sys
+umount --verbose $DIR/dev
+umount --verbose $DIR/run
+umount --verbose $DIR/tmp
+umount --verbose $DIR/var/db/repos/gentoo
+umount --verbose $DIR/var/lib/dbus
+umount --verbose $DIR$XDG_RUNTIME_DIR
+umount --verbose $DIR/home/steam/.pulse
+umount --verbose $DIR/home/steam/.config/pulse
