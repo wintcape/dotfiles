@@ -20,7 +20,6 @@ mount --verbose --make-rslave   $DIR/var/db/repos/gentoo
 cp                              /home/wintcape/.Xauthority      $DIR/home/steam/.Xauthority
 ln    --force                   /tmp/.X11-unix/X0               $DIR/tmp/.X11-unix/X0
 
-
 # Required for pulseaudio
 mount --verbose --rbind         /tmp                            $DIR/tmp
 mount --verbose --make-rslave   $DIR/tmp

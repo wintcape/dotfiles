@@ -16,6 +16,10 @@ mount --verbose --make-rslave   $DIR/run
 mount --verbose --rbind         /var/db/repos/gentoo        $DIR/var/db/repos/gentoo
 mount --verbose --make-rslave   $DIR/var/db/repos/gentoo
 
+# Required for X
+cp                              /home/wintcape/.Xauthority      $DIR/home/steam/.Xauthority
+ln    --force                   /tmp/.X11-unix/X0               $DIR/tmp/.X11-unix/X0
+
 # Required for pulseaudio
 mount --verbose --rbind         /tmp                            $DIR/tmp
 mount --verbose --make-rslave   $DIR/tmp
@@ -27,10 +31,6 @@ mount --verbose --rbind         /home/wintcape/.pulse           $DIR/home/steam/
 mount --verbose --make-rslave   $DIR/home/steam/.pulse
 mount --verbose --rbind         /home/wintcape/.config/pulse    $DIR/home/steam/.config/pulse
 mount --verbose --make-rslave   $DIR/home/steam/.config/pulse
-
-# Required for X
-cp                              /home/wintcape/.Xauthority      $DIR/home/steam/.Xauthority
-ln    --force                   /tmp/.X11-unix/X0               $DIR/tmp/.X11-unix/X0
 
 # Launch steam in chroot environment
 $ARCH chroot $DIR su -c 'steam -screen-fullscreen 1 -screen-width 3840 -screen-height 2160 -force-glcore42 -force-clamped' steam
