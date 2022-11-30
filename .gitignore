@@ -13,3 +13,4 @@ xmonad/.stack-work
 nvim/plugged
 xmonad/.log
 xmonad/script/.banner
+xmonad/src/Tray/Cmus.hs.tmp
