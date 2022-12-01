@@ -61,7 +61,7 @@ main =
     xmobar
   $ defaultConfig
     {
-      font = concatMap initFont myFonts
+      font = concatMap $ wrap "" "," $ myFonts
     , additionalFonts = []
                 
     , bgColor = colorBlack
@@ -89,7 +89,3 @@ main =
         , xmobarColor colorCyan colorBlack      "%cmus%"
         ]
     }
-    where
-
-        initFont :: String -> String
-        initFont = wrap "" ","
