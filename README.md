@@ -17,7 +17,9 @@ Backups of configuration files for my makeshift home desktop environment.
 - neovim
 - Mozilla Firefox
 - pulsemixer
+- cmus
 - htop
+- Thunar
 - Qalculate-gtk
 - VLC Media Player
 - OBS Studio
