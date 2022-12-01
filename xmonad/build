@@ -20,6 +20,6 @@ stack build || FAIL=1
 ln -f -T $(stack exec -- which $EXE_NAME) $1 || FAIL=2
 
 # Build file cleanup.
-rm ./src/*.hi ./src/*.o 2>/dev/null
+rm -r ./src/*.hi ./src/*.o 2>/dev/null
 
 exit $FAIL

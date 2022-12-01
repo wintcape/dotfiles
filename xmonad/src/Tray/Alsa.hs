@@ -28,10 +28,10 @@ instance Exec AlsaTray where
         run   ( AlsaTray c1 c2 _ ) =
                 readProcess "amixer" [ "get" , "Master" ] []
             >>= \raw ->
-                    let ( vol , muted ) =   (
-                                              tail $ init $ raw =~ "\\[[0-9]+%\\]"  :: String
-                                            ,               raw =~ "\\[off\\]"      :: Bool
-                                            )
+                    let ( vol , muted ) = (
+                                            tail $ init $ raw =~ "\\[[0-9]+%\\]"  :: String
+                                          ,               raw =~ "\\[off\\]"      :: Bool
+                                          )
                     in
                         let c = case muted of
                                     True  -> c2

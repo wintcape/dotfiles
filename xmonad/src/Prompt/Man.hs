@@ -8,15 +8,15 @@ import XMonad.Prelude
 
 -- Prompt
 import XMonad.Prompt
-import XMonad.Prompt.Shell (split)
+import XMonad.Prompt.Shell              (split)
 
 -- Actions
-import XMonad.Actions.OnScreen (viewOnScreen)
-import XMonad.Actions.SpawnOn (spawnOn)
+import XMonad.Actions.OnScreen          (viewOnScreen)
+import XMonad.Actions.SpawnOn           (spawnOn)
 
 -- System
 import System.Directory
-import System.FilePath (dropExtensions, (</>))
+import System.FilePath                  (dropExtensions, (</>))
 import System.IO
 import System.Process
 
@@ -30,14 +30,14 @@ data Man = Man
 instance XPrompt Man where showXPrompt Man = "man "
 
 
-manPrompt :: XPConfig -> ScreenId -> WorkspaceId -> X ()
-manPrompt conf sid wid =
+manPrompt :: XPConfig -> WorkspaceId -> X ()
+manPrompt conf wid =
         io getMans
     >>= \mans ->
             mkXPrompt Man conf
             ( manCompl conf mans )
             ( \input ->
-                windows ( viewOnScreen sid wid )
+                windows ( viewOnScreen 0 wid )
             >>  asks ( terminal . config )
             >>= \t ->
                     spawnOn wid $ t ++ " -e man " ++ input )

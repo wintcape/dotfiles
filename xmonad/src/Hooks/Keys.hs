@@ -13,7 +13,7 @@ import qualified    XMonad.Util.ExtensibleState as XS
 
 -- Data
 import              Data.Monoid
-import qualified    Data.Map as M   (Map, lookup)
+import qualified    Data.Map as M                       (Map, lookup)
 
 
 

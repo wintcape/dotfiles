@@ -1,36 +1,37 @@
 #!/bin/sh
 
-ARCH=linux64
-DIR=/opt/steam
+################################################################################
 
-# ========== DO NOT MODIFY BELOW THIS LINE ========== #
+ARCH=linux64
+
+################################################################################
 
 # Required for chroot
-mount --verbose --types proc    /proc                           $DIR/proc
-mount --verbose --rbind         /sys                            $DIR/sys
-mount --verbose --make-rslave   $DIR/sys
-mount --verbose --rbind         /dev                            $DIR/dev
-mount --verbose --make-rslave   $DIR/dev
-mount --verbose --rbind         /run                            $DIR/run
-mount --verbose --make-rslave   $DIR/run
-mount --verbose --rbind         /var/db/repos/gentoo            $DIR/var/db/repos/gentoo
-mount --verbose --make-rslave   $DIR/var/db/repos/gentoo
+mount --verbose --types proc    /proc                           $STEAM_DIR/proc
+mount --verbose --rbind         /sys                            $STEAM_DIR/sys
+mount --verbose --make-rslave   $STEAM_DIR/sys
+mount --verbose --rbind         /dev                            $STEAM_DIR/dev
+mount --verbose --make-rslave   $STEAM_DIR/dev
+mount --verbose --rbind         /run                            $STEAM_DIR/run
+mount --verbose --make-rslave   $STEAM_DIR/run
+mount --verbose --rbind         /var/db/repos/gentoo            $STEAM_DIR/var/db/repos/gentoo
+mount --verbose --make-rslave   $STEAM_DIR/var/db/repos/gentoo
 
 # Required for X
-cp                              /home/wintcape/.Xauthority      $DIR/home/steam/.Xauthority
-ln    --force                   /tmp/.X11-unix/X0               $DIR/tmp/.X11-unix/X0
+cp                              /home/wintcape/.Xauthority      $STEAM_DIR/home/steam/.Xauthority
+ln    --force                   /tmp/.X11-unix/X0               $STEAM_DIR/tmp/.X11-unix/X0
 
 # Required for pulseaudio
-mount --verbose --rbind         /tmp                            $DIR/tmp
-mount --verbose --make-rslave   $DIR/tmp
-mount --verbose --rbind         /var/lib/dbus                   $DIR/var/lib/dbus
-mount --verbose --make-rslave   $DIR/var/lib/dbus
-mount --verbose --rbind         $XDG_RUNTIME_DIR                $DIR$XDG_RUNTIME_DIR
-mount --verbose --make-rslave   $DIR$XDG_RUNTIME_DIR
-mount --verbose --rbind         /home/wintcape/.pulse           $DIR/home/steam/.pulse
-mount --verbose --make-rslave   $DIR/home/steam/.pulse
-mount --verbose --rbind         /home/wintcape/.config/pulse    $DIR/home/steam/.config/pulse
-mount --verbose --make-rslave   $DIR/home/steam/.config/pulse
+mount --verbose --rbind         /tmp                            $STEAM_DIR/tmp
+mount --verbose --make-rslave   $STEAM_DIR/tmp
+mount --verbose --rbind         /var/lib/dbus                   $STEAM_DIR/var/lib/dbus
+mount --verbose --make-rslave   $STEAM_DIR/var/lib/dbus
+mount --verbose --rbind         $XDG_RUNTIME_DIR                $STEAM_DIR$XDG_RUNTIME_DIR
+mount --verbose --make-rslave   $STEAM_DIR$XDG_RUNTIME_DIR
+mount --verbose --rbind         /home/wintcape/.pulse           $STEAM_DIR/home/steam/.pulse
+mount --verbose --make-rslave   $STEAM_DIR/home/steam/.pulse
+mount --verbose --rbind         /home/wintcape/.config/pulse    $STEAM_DIR/home/steam/.config/pulse
+mount --verbose --make-rslave   $STEAM_DIR/home/steam/.config/pulse
 
-$ARCH chroot $DIR /bin/bash
+$ARCH chroot $STEAM_DIR /bin/bash
 source /etc/profile 

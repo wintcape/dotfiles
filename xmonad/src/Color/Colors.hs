@@ -1,5 +1,6 @@
 module Color.Colors (
-                      colorBlack
+                      XColor
+                    , colorBlack
                     , colorWhite
                     , colorGray
                     , colorRed
@@ -13,29 +14,23 @@ module Color.Colors (
 
 
 
-colorBlack :: String
-colorBlack = "#000000"
+type XColor = String
 
-colorWhite :: String
-colorWhite = "#FFFFFF"
-
-colorGray :: String
-colorGray = "#808080"
-
-colorRed :: String
-colorRed = "#FF0000"
-
-colorGreen :: String
-colorGreen = "#00FF00"
-
-colorBlue :: String
-colorBlue = "#0000FF"
-
-colorCyan :: String
-colorCyan = "#00FFFF"
-
-colorDarkCyan :: String
+colorBlack    :: XColor
+colorWhite    :: XColor
+colorGray     :: XColor
+colorRed      :: XColor
+colorGreen    :: XColor
+colorBlue     :: XColor
+colorCyan     :: XColor
+colorDarkCyan :: XColor
+colorDarkGray :: XColor
+colorBlack    = "#000000"
+colorWhite    = "#FFFFFF"
+colorGray     = "#808080"
+colorRed      = "#FF0000"
+colorGreen    = "#00FF00"
+colorBlue     = "#0000FF"
+colorCyan     = "#00FFFF"
 colorDarkGray = "#303030"
-
-colorDarkGray :: String
 colorDarkCyan = "#008080"

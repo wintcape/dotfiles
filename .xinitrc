@@ -13,10 +13,8 @@ export GDK_SCALE=2
 gnome-keyring-daemon --start
 export SSH_AUTH_SOCK
 
-# Launch audio controller
+# Launch audio server
 pulseaudio --start
-
-
 
 
 ## CONTINUE: Launch window manager

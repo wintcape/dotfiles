@@ -18,7 +18,7 @@ executable xmobar
       Prompt.Search
       Prompt.Terminal
       Tray.Alsa
-      Util.RunElevated
+      Util.Run
       Paths_xmonad_vem
   hs-source-dirs:
       src
@@ -47,7 +47,7 @@ executable xmonad
       Prompt.Search
       Prompt.Terminal
       Tray.Alsa
-      Util.RunElevated
+      Util.Run
       Paths_xmonad_vem
   hs-source-dirs:
       src

@@ -7,10 +7,10 @@ import XMonad
 
 -- Prompt
 import XMonad.Prompt
-import XMonad.Prompt.Shell (getCommands, getShellCompl)
+import XMonad.Prompt.Shell  (getCommands, getShellCompl)
 
--- Util
-import XMonad.Util.Run     (runInTerm)
+-- Custom: Util
+import Util.Run             (runInTerm)
 
 
 
