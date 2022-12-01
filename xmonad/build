@@ -10,16 +10,13 @@ EXE_NAME=xmonad
 # Unset STACK_YAML, to ensure that $SRC_DIR/stack.yaml is used.
 unset STACK_YAML
 
-FAIL=0
 cd $SRC_DIR
 
 # Do the build.
-stack build || FAIL=1
+stack build
 
 # Create a hard link at the requested destination, replacing any existing one.
-ln -f -T $(stack exec -- which $EXE_NAME) $1 || FAIL=2
+ln -f -T $(stack exec -- which $EXE_NAME) $1
 
 # Build file cleanup.
 rm -r ./src/*.hi ./src/*.o 2>/dev/null
-
-exit $FAIL
