@@ -25,4 +25,4 @@ Backups of configuration files for my makeshift home desktop environment.
 - OBS Studio
 - Audacity
 - Minecraft
-- Steam (runs in chroot environment)
+- Steam (must be pre-installed in chroot environment)
