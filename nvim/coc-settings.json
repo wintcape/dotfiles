@@ -10,19 +10,8 @@
     "languageserver": {
         "ccls": {
             "command": "ccls",
-            "filetypes": [
-                "c",
-                "cpp",
-                "objc",
-                "objcpp"
-            ],
-            "rootPatterns": [
-                ".ccls",
-                "compile_commands.json",
-                ".vim/",
-                ".git/",
-                ".hg/"
-            ],
+            "rootPatterns": [".ccls","compile_commands.json",".vim/",".git/",".hg/"],
+            "filetypes": ["c", "cpp", "objc", "objcpp"],
             "initializationOptions": {
                 "cache": {
                     "directory": "/tmp/ccls"

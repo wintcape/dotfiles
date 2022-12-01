@@ -1,30 +1,30 @@
 " Global vim behavior
 
-set number							" Show line numbers
-set autoindent							" Auto indent
-set mouse=a							" Enable mouse functionality
-set showmatch							" Brace matching
-set expandtab tabstop=4 shiftwidth=4 smarttab softtabstop=4	" TAB behavior
-set completeopt-=preview					" No preview window
-set title							" Dynamic window title
-set clipboard+=unnamedplus					" Set global clipboard
-set autochdir							" Dynamic cwd
-set splitbelow							" Vertical split
-set splitright							" Horizontal split
+set number                                                      " Show line numbers
+set autoindent                                                  " Auto indent
+set mouse=a                                                     " Enable mouse functionality
+set showmatch                                                   " Brace matching
+set expandtab tabstop=4 shiftwidth=4 smarttab softtabstop=4     " TAB behavior
+set completeopt-=preview                                        " No preview window
+set title                                                       " Dynamic window title
+set clipboard+=unnamedplus                                      " Set global clipboard
+set autochdir                                                   " Dynamic pwd
+set splitbelow                                                  " Vertical split
+set splitright                                                  " Horizontal split
 
 
 " Plugins
 
 call plug#begin('~/.config/nvim/plugged')
-Plug 'https://github.com/tpope/vim-surround'			" Surrounding ysw)
-Plug 'https://github.com/vim-airline/vim-airline'		" Status bar
-Plug 'https://github.com/preservim/nerdtree'			" Directory explorer
-Plug 'https://github.com/tpope/vim-commentary'			" Comments for gcc, gc
-Plug 'https://github.com/tc50cal/vim-terminal'			" Vim terminal
-Plug 'https://github.com/terryma/vim-multiple-cursors'		" Multiple cursors
-Plug 'https://github.com/preservim/tagbar'			" Tagbar
-Plug 'https://github.com/neoclide/coc.nvim'			" Code autocompletion
-Plug 'rubixninja314/vim-mcfunction'				" MCFUNCTION syntax
+Plug 'https://github.com/tpope/vim-surround'                    " Surrounding ysw)
+Plug 'https://github.com/vim-airline/vim-airline'               " Status bar
+Plug 'https://github.com/preservim/nerdtree'                    " Directory explorer
+Plug 'https://github.com/tpope/vim-commentary'                  " Comments for gcc, gc
+Plug 'https://github.com/tc50cal/vim-terminal'                  " Vim terminal
+Plug 'https://github.com/terryma/vim-multiple-cursors'          " Multiple cursors
+Plug 'https://github.com/preservim/tagbar'                      " Tagbar
+Plug 'https://github.com/neoclide/coc.nvim'                     " Code autocompletion
+Plug 'rubixninja314/vim-mcfunction'                             " mcfunction syntax
 call plug#end()
 
 
@@ -35,12 +35,9 @@ filetype indent on
 syntax on
 
 
-" ----------------------------------
-
-
 " NERDTree
 
-let g:NERDTreeMinimalMenu=1					" Bugfix for menu
+let g:NERDTreeMinimalMenu=1                    " Bugfix for menu
 let g:NERDTreeDirArrowExpandable='+'
 let g:NERDTreeDirArrowCollapsible='~'
 
@@ -56,11 +53,11 @@ function ExitFileManager()
 endfunction
 
 autocmd WinEnter,BufEnter * if count(@%, "NERD_tree_1")
-							\ | call EnterFileManager()
-							\ | endif
+                            \ | call EnterFileManager()
+                            \ | endif
 autocmd WinEnter,BufEnter * if !count(@%, "NERD_tree_1")
-							\ | call ExitFileManager()
-							\ | endif
+                            \ | call ExitFileManager()
+                            \ | endif
 
 
 " MCFUNCTION
@@ -68,8 +65,8 @@ autocmd WinEnter,BufEnter * if !count(@%, "NERD_tree_1")
 let g:mcversion='latest'
 
 autocmd WinEnter,BufEnter * if &filetype == "mcfunction"
-							\ | set notermguicolors
-							\ | endif
+                            \ | set notermguicolors
+                            \ | endif
 autocmd WinEnter,BufEnter * if &filetype != "mcfunction" 
                             \ | set termguicolors 
                             \ | endif
@@ -79,16 +76,16 @@ autocmd WinEnter,BufEnter *.mcmeta set syntax=json
 " NBT
 
 function NBTRead()
-	let l:file=@%
-	!nbted --print --input % --output %_pp
-	tabnew
-	execute "edit " . file . "_pp"
-	tabprev
-	q
+    let l:file=@%
+    !nbted --print --input % --output %_pp
+    tabnew
+    execute "edit " . file . "_pp"
+    tabprev
+    q
 endfunction
 
 function NBTWrite()
-	!nbted --reverse --input % --output $(echo % | rev | cut -c 4- | rev)
+    !nbted --reverse --input % --output $(echo % | rev | cut -c 4- | rev)
 endfunction
 
 autocmd WinEnter,BufEnter *.dat call NBTRead()
@@ -148,10 +145,10 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in")
                     \ | cd $HOME
                     \ | NERDTree
-					\ |	wincmd l
-					\ |	q
+                    \ | wincmd l
+                    \ | q
                     \ | call EnterFileManager()
-					\ | endif
+                    \ | endif
 
 
 " Colors
