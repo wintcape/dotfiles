@@ -7,10 +7,10 @@ EXE_NAME=xmonad
 
 ################################################################################
 
+cd $SRC_DIR
+
 # Unset STACK_YAML, to ensure that $SRC_DIR/stack.yaml is used.
 unset STACK_YAML
-
-cd $SRC_DIR
 
 # Do the build.
 stack build
