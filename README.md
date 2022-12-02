@@ -5,6 +5,7 @@ Backups of configuration files for my makeshift home desktop environment.
 - **Editor**: neovim
 - **Browser**: Mozilla Firefox
 - **Audio controller**: pulsemixer
+- **Font**: AcPlus IBM VGA 8x16 (must be installed, see `fonts/`)
 
 ## Dependencies
 - X
