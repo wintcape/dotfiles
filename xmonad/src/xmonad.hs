@@ -223,6 +223,7 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-S-<Escape>" , io exitSuccess )                                                       -- kill X
     , ( "M-<F5>"       , runInTermElevated "Shutdown?" "--title 'Shutdown?'" "shutdown -h now" )-- elevated: shutdown
     , ( "M-<F6>"       , runInTermElevated "Reboot?"   "--title 'Reboot?'"   "reboot" )         -- elevated: reboot
+    , ( "M-<F7>"       , runInTermElevated "Launch sudo nvim?" "" $ xappCommand myEditor )      -- elevated: text editor
 
     -- Workspace navigation
     , ( "<KP_Insert>"   , windows $ W.greedyView ( myWorkspaces !! 0 ) )                        -- move focus to workspace n
@@ -506,11 +507,8 @@ myEventHook ev =
       $ ev
       where
         focusOnMouseMoveHook :: Bool -> Event -> X All
-        focusOnMouseMoveHook b =
-            case b of
-                True  -> focusOnMouseMove
-                False -> mempty
-
+        focusOnMouseMoveHook True  = focusOnMouseMove
+        focusOnMouseMoveHook False = mempty
 
 
 
