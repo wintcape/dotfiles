@@ -24,10 +24,10 @@ import XMonad.Util.SpawnOnce    (spawnOnce, spawnOnOnce)
 
 commandStr :: String -> String -> String
 commandStr opt cmd = ( xappCommand myTerminal ) ++ " " ++ opt ++ " -e "
-                  ++ myPath ++ "script/run \"" ++ cmd ++ "\""
+                  ++ myPath ++ "script/eval \"" ++ cmd ++ "\" \"" ++ myLogFile ++ "\""
 
 elevatedCommandStr :: String -> String -> String -> String
-elevatedCommandStr msg opt cmd = commandStr opt $ "echo " ++ msg ++ ";sudo " ++ cmd ++ ";"
+elevatedCommandStr msg opt cmd = commandStr opt ( "echo " ++ msg ++ ";sudo " ++ cmd ++ ";" )
 
 
 runInTerm   , runInTermOnce   ::                String -> String -> X ()

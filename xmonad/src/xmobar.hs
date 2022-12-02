@@ -61,7 +61,7 @@ main =
     xmobar
   $ defaultConfig
     {
-      font = concatMap $ wrap "" "," $ myFonts
+      font = concatMap ( wrap "" "," ) myFonts
     , additionalFonts = []
                 
     , bgColor = colorBlack

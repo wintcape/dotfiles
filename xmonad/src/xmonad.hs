@@ -1,13 +1,12 @@
 import              Config.Prelude
 
 -- XMonad: Base
-import              XMonad                   hiding ((|||))
+import              XMonad                   hiding ((|||), JumpToLayout(..))
 import              XMonad.Prelude
 import qualified    XMonad.StackSet as W
 
 -- XMonad: Actions
 import              XMonad.Actions.CopyWindow       (kill1)
-import              XMonad.Actions.CycleWS          (shiftNextScreen)
 import              XMonad.Actions.OnScreen         (onlyOnScreen, viewOnScreen)
 import              XMonad.Actions.Search           (dictionary, duckduckgo, google, hoogle,
                                                      thesaurus, wikipedia, youtube)
@@ -26,10 +25,9 @@ import              XMonad.Hooks.StatusBar.PP
 import              Hooks.Keys                      (KeyState(..), ifKey, keyDownEventHook, keyUpEventHook)
 
 -- XMonad: Layout modifiers
-import              XMonad.Layout            hiding ((|||))
 import              XMonad.Layout.Fullscreen
 import              XMonad.Layout.Grid
-import              XMonad.Layout.LayoutCombinators ((|||), JumpToLayout)
+import              XMonad.Layout.LayoutCombinators ((|||), JumpToLayout(..))
 import              XMonad.Layout.NoBorders
 import              XMonad.Layout.PerWorkspace
 import              XMonad.Layout.Renamed           (Rename(Replace), renamed)
@@ -47,11 +45,12 @@ import              Prompt.Terminal                 (terminalPrompt)
 import              XMonad.Util.ClickableWorkspaces (clickablePP)
 import              XMonad.Util.EZConfig            (mkKeymap)
 import              XMonad.Util.NamedScratchpad
+import              XMonad.Util.SpawnOnce           (spawnOnOnce)
 import qualified    XMonad.Util.ExtensibleState as XS
 
 -- Custom: Util
-import              Util.Run                        (runInTerm, runInTermOn, runInTermElevated,
-                                                     runInTermOnOnce, runInTermElevatedOnce)
+import              Util.Run                        (runInTermOn, runInTermElevated, runInTermOnOnce,
+                                                     runInTermElevatedOnce)
 
 -- System
 import              System.Exit
@@ -117,7 +116,7 @@ myFullscreenLayout  =          fullscreenFull $ myFullLayout ||| (noBorders $ Fu
 --
 myStatusBar :: StatusBarConfig
 myStatusBar = statusBarProp
-    ( "$HOME/.local/bin/xmobar" )
+    (  myPath ++ "../../.local/bin/xmobar" )
     ( clickablePP $ filterOutWsPP [ "NSP" ] myXmobarPP )
     where
         myXmobarPP :: PP
@@ -215,15 +214,15 @@ myModMask = mod4Mask
 
 
 myKeyBindings :: XConfig l -> M.Map ( KeyMask , KeySym ) ( X () )
-myKeyBindings conf@( XConfig { XMonad.modMask = myModMask } ) = mkKeymap conf $
+myKeyBindings conf = mkKeymap conf $
     [
 
     -- Session 
       ( "M-<Escape>"   ,    ( windows $ viewOnScreen 0 "sys" )                                  -- recompile and restart
-                        >>  ( runInTermOn "sys" "--title 'Recompiling. . .'" "xmonad --recompile && xmonad --restart" ) )
+                        >>  ( runInTermOn "sys" "--title 'Recompiling. . .'" ( myPath ++ "build && xmonad --restart" ) ) )
     , ( "M-S-<Escape>" , io exitSuccess )                                                       -- kill X
     , ( "M-<F5>"       , runInTermElevated "Shutdown?" "--title 'Shutdown?'" "shutdown -h now" )-- elevated: shutdown
-    , ( "M-<F6>"       , runInTermElevated "Reboot?"   "--title   'Reboot?'" "reboot" )         -- elevated: reboot
+    , ( "M-<F6>"       , runInTermElevated "Reboot?"   "--title 'Reboot?'"   "reboot" )         -- elevated: reboot
 
     -- Workspace navigation
     , ( "<KP_Insert>"   , windows $ W.greedyView ( myWorkspaces !! 0 ) )                        -- move focus to workspace n
@@ -253,7 +252,7 @@ myKeyBindings conf@( XConfig { XMonad.modMask = myModMask } ) = mkKeymap conf $
     
     -- Application spawning
     , ( "M-M1-<Return>" , spawn         $ xappCommand myTerminal )                              -- alacritty
-    , ( "M-M1-e"        , spawnOn "vim" $ xappCommand myEditor' )                               -- nvim
+    , ( "M-M1-e"        , spawnOn "vim" $ xappCommand myEditor )                                -- nvim
     , ( "M-M1-b"        , spawn         $ xappCommand myBrowser )                               -- firefox
     , ( "M-<F1>"        , runInTermElevated "Launch steam?"                                     -- elevated: steam
                                             ( "--title 'steam'          --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
@@ -299,7 +298,7 @@ myKeyBindings conf@( XConfig { XMonad.modMask = myModMask } ) = mkKeymap conf $
 
 
 myKeyUpBindings :: XConfig l -> M.Map ( KeyMask , KeySym ) ( X () )
-myKeyUpBindings conf@( XConfig { XMonad.modMask = myModMask } ) = mkKeymap conf $
+myKeyUpBindings conf = mkKeymap conf $
     [
       ( "M-`"       , ifKey Up ( sendMessage $ JumpToLayout "full" ) )                          -- switch to full layout
     , ( "M-<Space>" , ifKey Up $ XS.put Up )                                                    -- do nothing but pass the key
@@ -307,7 +306,7 @@ myKeyUpBindings conf@( XConfig { XMonad.modMask = myModMask } ) = mkKeymap conf 
 
 
 myKeyDownBindings :: XConfig l -> M.Map ( KeyMask , KeySym ) ( X () )
-myKeyDownBindings conf@( XConfig { XMonad.modMask = myModMask } ) = mkKeymap conf $
+myKeyDownBindings conf = mkKeymap conf $
     [
       ( "M-`"       , ifKey Down ( sendMessage $ JumpToLayout "grid" ) )                        -- switch to grid layout
     , ( "M-<Space>" , ifKey Down $ sendMessage   NextLayout )                                   -- switch to next layout
@@ -397,15 +396,15 @@ myManageHook = composeAll
 
         , ( className =? ( xappClassName myTerminal )
             <&&>
-          ( title =? "fim" <||> "fim " ?^ title ) )                                                     --> doShift "sys"
-
-        , ( className =? ( xappClassName myTerminal )
-            <&&>
           ( title =? "obs" <||> "obs " ?^ title ) )                                                     --> doShift "sys"
         
         -- Minecraft
-        , "Minecraft" ?^ className                                                                      --> doShift "ful"
-        , ( className =? "minecraft-launcher" <||> className =? "Minecraft Launcher" )                  --> doShift "ful"
+        , "Minecraft" ?^ className                                                                      --> liftX   ( windows $ viewOnScreen 1 "ful" )
+                                                                                                        >>  liftX   ( windows $ viewOnScreen 0 "sys" )
+                                                                                                        >>  doShift "ful"
+        , ( className =? "minecraft-launcher" <||> className =? "Minecraft Launcher" )                  --> liftX   ( windows $ viewOnScreen 1 "ful" )
+                                                                                                        >>  liftX   ( windows $ viewOnScreen 0 "sys" )
+                                                                                                        >>  doShift "ful"
 
         , ( className =? "Minecraft Launcher"
             <&&>
@@ -472,7 +471,7 @@ myManageHook = composeAll
           ( title =? "cmus"      <||> "cmus "      ?^ title ) )                                         --> doShift' "mus"
 
         ] <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> manageSpawn
-        
+ 
         where
         
             -- (?^)
@@ -491,19 +490,27 @@ myManageHook = composeAll
 
 
 myStartupHook :: X ()
-myStartupHook = 
-        ( windows $ onlyOnScreen 0 "sys" )
+myStartupHook =
+        ( spawn $ "truncate -s 0 " ++ myLogFile )       -- clear log file
+    >>  ( windows $ onlyOnScreen 0 "sys" )
     >>  ( windows $ onlyOnScreen 1 "vim" )
     >>  ( runInTermElevatedOnce "Launch sudo nvim?" "" $ xappCommand myEditor )
-    >>  ( runInTermOnOnce "vim"                     "" $ xappCommand myEditor )
+    >>  ( spawnOnOnce "vim"                            $ xappCommand myEditor )
 
 
 myEventHook :: Event -> X All
 myEventHook ev = 
-        focusOnMouseMove
+        focusOnMouseMoveHook myFocusFollowsMouse
     <+> keyDownEventHook ( myKeyDownBindings myConfig )
     <+> keyUpEventHook   ( myKeyUpBindings   myConfig )
       $ ev
+      where
+        focusOnMouseMoveHook :: Bool -> Event -> X All
+        focusOnMouseMoveHook b =
+            case b of
+                True  -> focusOnMouseMove
+                False -> mempty
+
 
 
 

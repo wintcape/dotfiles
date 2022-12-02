@@ -1,5 +1,5 @@
 name: xmonad-vem
-version: 0.3
+version: 0.0.8
 
 ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints -O2 -j -dynamic
 

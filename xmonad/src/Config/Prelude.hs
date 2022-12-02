@@ -4,11 +4,11 @@ module Config.Prelude   (
                         , xappCommand
                         , xappClassName
                         , myPath
+                        , myLogFile
                         , myFont
                         , myTerminal
                         , myBrowser
                         , myEditor
-                        , myEditor'
                         ) where
 
 
@@ -16,6 +16,9 @@ module Config.Prelude   (
 
 myPath :: String
 myPath = "/home/wintcape/.config/xmonad/"
+
+myLogFile :: String
+myLogFile = myPath ++ ".log"
 
 myFont :: String
 myFont = "xft:PxPlus IBM VGA 8x16:"
@@ -27,15 +30,15 @@ data XApp     = XApp String XAppType
 data XAppType = CLI | GUI String
 
 xappCommand , xappClassName :: XApp -> String
-xappCommand   ( XApp s _ )         = s
+xappCommand   ( XApp s ( GUI _ ) ) = s
+xappCommand   ( XApp s CLI )       = ( xappCommand myTerminal ) ++ " -e " ++ s
 xappClassName ( XApp _ ( GUI s ) ) = s
 xappClassName ( XApp _ CLI )       = xappClassName myTerminal
 
 
-myTerminal           :: XApp
-myBrowser            :: XApp
-myEditor , myEditor' :: XApp
+myTerminal :: XApp
+myBrowser  :: XApp
+myEditor   :: XApp
 myTerminal = XApp "alacritty" $ GUI "Alacritty"
 myBrowser  = XApp "firefox"   $ GUI "firefox"
 myEditor   = XApp "nvim"        CLI
-myEditor'  = XApp ( ( xappCommand myTerminal ) ++ " -e " ++ ( xappCommand myEditor ) ) CLI

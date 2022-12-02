@@ -13,9 +13,9 @@ export GDK_SCALE=2
 gnome-keyring-daemon --start
 export SSH_AUTH_SOCK
 
-# Launch audio server
+# Launch audio controller
 pulseaudio --start
 
 
-## CONTINUE: Launch window manager
-exec dbus-launch --exit-with-session $HOME/.local/bin/xmonad
+## Launch window manager
+exec dbus-launch --exit-with-session xmonad
