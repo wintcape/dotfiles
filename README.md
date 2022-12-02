@@ -13,6 +13,11 @@ Backups of configuration files for my makeshift home desktop environment.
 - dbus
 - sudo
 
+## To build and launch
+```
+$ <path>/xmonad/build && startx
+```
+
 ## Supported applications
 - Alacritty
 - neovim
