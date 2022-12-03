@@ -2,6 +2,7 @@ module Config.Prelude   (
                           XApp(..)
                         , XAppType(..)
                         , xappCommand
+                        , xappCommand'
                         , xappClassName
                         , myPath
                         , myLogFile
@@ -24,14 +25,12 @@ myFont :: String
 myFont = "xft:PxPlus IBM VGA 8x16:"
 
 
-
-
 data XApp     = XApp String XAppType
 data XAppType = CLI | GUI String
-
-xappCommand , xappClassName :: XApp -> String
-xappCommand   ( XApp s ( GUI _ ) ) = s
-xappCommand   ( XApp s CLI )       = ( xappCommand myTerminal ) ++ " -e " ++ s
+xappCommand , xappCommand' , xappClassName :: XApp -> String
+xappCommand   ( XApp s _ )         = s
+xappCommand'  ( XApp s ( GUI _ ) ) = s
+xappCommand'  ( XApp s CLI )       = ( xappCommand myTerminal ) ++ " -e " ++ s
 xappClassName ( XApp _ ( GUI s ) ) = s
 xappClassName ( XApp _ CLI )       = xappClassName myTerminal
 

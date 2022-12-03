@@ -2,13 +2,13 @@ module  Prompt.Search   (
                           searchPrompt
                         ) where
 
--- Base
+-- XMonad: Base
 import  XMonad
 
--- Prompt
+-- XMonad: Prompt
 import  XMonad.Prompt
 
--- Actions
+-- XMonad: Actions
 import  XMonad.Actions.Search   (Browser, SearchEngine(..), search)
 
 -- Data

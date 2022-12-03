@@ -24,7 +24,8 @@ executable xmobar
       src
   ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints -O2 -j -dynamic
   build-depends:
-      base
+      X11 >=1.10
+    , base
     , containers
     , directory
     , filepath

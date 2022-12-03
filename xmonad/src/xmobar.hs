@@ -3,16 +3,17 @@
 
 import          Config.Prelude
 
--- Base
+-- Xmobar: Base
 import          Xmobar
 
--- XMonad
+-- XMonad: Hooks
 import          XMonad.Hooks.StatusBar.PP   (wrap, xmobarColor)
 
--- Custom
-import          Color.Colors
+-- Custom: Plugin
 import          Tray.Alsa 
 
+-- Custom: Colors
+import          Color.Colors
 
 
 

@@ -22,7 +22,7 @@ import              XMonad.Hooks.StatusBar
 import              XMonad.Hooks.StatusBar.PP
 
 -- Custom: Hooks
-import              Hooks.Keys                      (KeyState(..), ifKey, keyDownEventHook, keyUpEventHook)
+import              Hooks.Keys                      (KeyState(..), keyDownEventHook, keyUpEventHook)
 
 -- XMonad: Layout modifiers
 import              XMonad.Layout.Fullscreen
@@ -138,9 +138,9 @@ myStatusBar = statusBarProp
 myScratchpads :: [ NamedScratchpad ]
 myScratchpads =
     [
-      NS "sh" spawnTerminal findTerminal manageTerminal
-    , NS "htop" spawnHtop findHtop manageHtop
-    , NS "qalc" spawnCalculator findCalculator manageCalculator
+      NS "sh"         spawnTerminal findTerminal manageTerminal
+    , NS "htop"       spawnHtop findHtop manageHtop
+    , NS "qalc"       spawnCalculator findCalculator manageCalculator
     , NS "pulsemixer" spawnPulsemixer findPulsemixer managePulsemixer
     ]
     where
@@ -253,7 +253,7 @@ myKeyBindings conf = mkKeymap conf $
     
     -- Application spawning
     , ( "M-M1-<Return>" , spawn         $ xappCommand myTerminal )                              -- alacritty
-    , ( "M-M1-e"        , spawnOn "vim" $ xappCommand myEditor )                                -- nvim
+    , ( "M-M1-e"        , spawnOn "vim" $ xappCommand' myEditor )                               -- nvim
     , ( "M-M1-b"        , spawn         $ xappCommand myBrowser )                               -- firefox
     , ( "M-<F1>"        , runInTermElevated "Launch steam?"                                     -- elevated: steam
                                             ( "--title 'steam'          --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
@@ -290,7 +290,7 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-<F11>"       , spawn "cmus-remote --next" )                                          -- cmus next track
     , ( "M-<Pause>"     , spawn "amixer set Master toggle" )                                    -- master alsa mute toggle
    
-    -- Dummy entries required for XMonad key detection
+    -- Dummy entries required to pass keys to XMonad
     -- (see myKeyUpBindings, myKeyDownBindings)
     , ( "M-<Space>" , return () )
     , ( "M-`"       , return () )
@@ -301,16 +301,16 @@ myKeyBindings conf = mkKeymap conf $
 myKeyUpBindings :: XConfig l -> M.Map ( KeyMask , KeySym ) ( X () )
 myKeyUpBindings conf = mkKeymap conf $
     [
-      ( "M-`"       , ifKey Up ( sendMessage $ JumpToLayout "full" ) )                          -- switch to full layout
-    , ( "M-<Space>" , ifKey Up $ XS.put Up )                                                    -- do nothing but pass the key
+      ( "M-`"       , sendMessage $ JumpToLayout "full" )                                       -- switch to full layout
+    , ( "M-<Space>" , return () )                                                               -- do nothing but pass the key
     ]
 
 
 myKeyDownBindings :: XConfig l -> M.Map ( KeyMask , KeySym ) ( X () )
 myKeyDownBindings conf = mkKeymap conf $
     [
-      ( "M-`"       , ifKey Down ( sendMessage $ JumpToLayout "grid" ) )                        -- switch to grid layout
-    , ( "M-<Space>" , ifKey Down $ sendMessage   NextLayout )                                   -- switch to next layout
+      ( "M-`"       , sendMessage $ JumpToLayout "grid" )                                       -- switch to grid layout
+    , ( "M-<Space>" , sendMessage   NextLayout )                                                -- switch to next layout
     ]
 
 
@@ -373,17 +373,20 @@ myManageHook = composeAll
 
         -- Thunar
         ,   className =? "Thunar"                                                                       --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
-        , ( className =? "Thunar"
-            <&&>
-            title =? "Create New Folder" )                                                              --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
 
-        , ( className =? ( xappClassName myTerminal )
-            <&&>
-          ( title =? "thunar" <||> "thunar " ?^ title ) )                                               --> doShift "sys"
+        ,   (    className =? "Thunar"
+            <&&> title =? "Create New Folder" )                                                         --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
 
         -- sys workspace
         ,   className =? "Xmessage"                                                                     --> doHideIgnore
                                                                                                     --  >>  doShift "sys"
+        ,   (      className =? ( xappClassName myTerminal )
+            <&&> ( title   =? "thunar"             <||> "thunar "             ?^ title
+            <||>   title   =? "vlc"                <||> "vlc "                ?^ title
+            <||>   title   =? "obs"                <||> "obs "                ?^ title
+            <||>   title   =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title
+            <||>   title   =? "audacity"           <||> "audacity "           ?^ title
+            <||>   title   =? "firefox"            <||> "firefox "            ?^ title ) )              --> doShift "sys"
 
         -- Image viewing / capture
         ,   className =? "vlc"                                                                          --> liftX   ( windows $ viewOnScreen 1 "ful" )
@@ -391,14 +394,7 @@ myManageHook = composeAll
 
         ,   className =? "obs"                                                                          --> liftX   ( windows $ viewOnScreen 0 "rec" )
                                                                                                         >>  doShift "rec"
-        , ( className =? ( xappClassName myTerminal )
-            <&&>
-          ( title =? "vlc" <||> "vlc " ?^ title ) )                                                     --> doShift "sys"
 
-        , ( className =? ( xappClassName myTerminal )
-            <&&>
-          ( title =? "obs" <||> "obs " ?^ title ) )                                                     --> doShift "sys"
-        
         -- Minecraft
         , "Minecraft" ?^ className                                                                      --> liftX   ( windows $ viewOnScreen 1 "ful" )
                                                                                                         >>  liftX   ( windows $ viewOnScreen 0 "sys" )
@@ -406,70 +402,40 @@ myManageHook = composeAll
         , ( className =? "minecraft-launcher" <||> className =? "Minecraft Launcher" )                  --> liftX   ( windows $ viewOnScreen 1 "ful" )
                                                                                                         >>  liftX   ( windows $ viewOnScreen 0 "sys" )
                                                                                                         >>  doShift "ful"
+        ,   (    className =? "Minecraft Launcher"
+            <&&> title =? "Minecraft game output" )                                                     --> doShift "sys"
 
-        , ( className =? "Minecraft Launcher"
-            <&&>
-            title =? "Minecraft game output" )                                                          --> doShift "sys"
-
-        , ( className =? ( xappClassName myTerminal )
-            <&&>
-          ( title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title ) )                       --> doShift "sys"
 
         -- Audacity
         ,   className =? "Audacity"                                                                     --> liftX   ( windows $ viewOnScreen 0 "rec" )
                                                                                                         >>  doShift "rec"
-        , ( className =? "Audacity"
-            <&&>
-            title =? "Select one or more files" )                                                       --> myDoFloat
+        ,   (    className =? "Audacity"
+            <&&> title =? "Select one or more files" )                                                  --> myDoFloat
 
-        , ( className =? ( xappClassName myTerminal )
-            <&&>
-          ( title =? "audacity" <||> "audacity " ?^ title ) )                                           --> doShift "sys"
-        
         -- Steam
         ,   className =? "Steam"                                                                        --> liftX   ( windows $ viewOnScreen 1 "ful" )
                                                                                                         >>  liftX   ( windows $ viewOnScreen 0 "sys" )
                                                                                                         >>  doShift "ful"
-        , ( className =? "Steam"
-            <&&>
-            title =? "Friends List" )                                                                   --> doHideIgnore
-
-        , ( className =? "Steam"
-            <&&>
-            title =? "Steam - News" )                                                                   --> doHideIgnore
+        ,   (      className =? "Steam"
+            <&&> ( title =? "Friends List"
+            <||>   title =? "Steam - News" ) )                                                          --> doHideIgnore
 
         ,   className =? "csgo_linux64"                                                                 --> doShift "ful"
                                                                                                         >>  doSink
         
         -- Firefox
-        , ( className =? "firefox"
-            <&&>
-            title =? "Mozilla Firefox" )                                                                --> doShift' "web"
+        ,   (    className =? "firefox"
+            <&&> title =? "Mozilla Firefox" )                                                           --> doShift' "web"
 
-        , ( className =? "firefox"
-            <&&>
-            title =? "File Upload" )                                                                    --> myDoFloat
-
-        , ( className =? "firefox"
-            <&&>
-            title =? "Open File" )                                                                      --> myDoFloat
-
-        , ( className =? "firefox"
-            <&&>
-            title =? "Library" )                                                                        --> myDoFloat
-
-        , ( className =? "firefox"
-            <&&>
-            title =? "Choose Application" )                                                             --> myDoFloat
-
-        , ( className =? ( xappClassName myTerminal )
-            <&&>
-          ( title =? "firefox" <||> "firefox " ?^ title ) )                                             --> doShift "sys"
+        ,   (      className =? "firefox"
+            <&&> ( title =? "File Upload"
+            <||>   title =? "Open File"
+            <||>   title =? "Library"
+            <||>   title =? "Choose Application" ) )                                                    --> myDoFloat
         
         -- Custom terminals
-        , ( className =? ( xappClassName myTerminal )
-            <&&>
-          ( title =? "cmus"      <||> "cmus "      ?^ title ) )                                         --> doShift' "mus"
+        ,   (      className =? ( xappClassName myTerminal )
+            <&&> ( title =? "cmus" <||> "cmus " ?^ title ) )                                            --> doShift' "mus"
 
         ] <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> manageSpawn
  
@@ -495,8 +461,8 @@ myStartupHook =
         ( spawn $ "truncate -s 0 " ++ myLogFile )       -- clear log file
     >>  ( windows $ onlyOnScreen 0 "sys" )
     >>  ( windows $ onlyOnScreen 1 "vim" )
-    >>  ( runInTermElevatedOnce "Launch sudo nvim?" "" $ xappCommand myEditor )
-    >>  ( spawnOnOnce "vim"                            $ xappCommand myEditor )
+    >>  ( runInTermElevatedOnce "Launch sudo nvim?" "" $ xappCommand  myEditor )
+    >>  ( spawnOnOnce "vim"                            $ xappCommand' myEditor )
 
 
 myEventHook :: Event -> X All

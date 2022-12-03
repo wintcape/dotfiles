@@ -2,10 +2,10 @@ module  Prompt.Terminal (
                           terminalPrompt
                         ) where
 
--- Base
+-- XMonad: Base
 import XMonad
 
--- Prompt
+-- XMonad: Prompt
 import XMonad.Prompt
 import XMonad.Prompt.Shell  (getCommands, getShellCompl)
 

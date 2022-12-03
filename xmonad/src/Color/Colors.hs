@@ -15,7 +15,6 @@ module Color.Colors (
 
 
 type XColor = String
-
 colorBlack    :: XColor
 colorWhite    :: XColor
 colorGray     :: XColor

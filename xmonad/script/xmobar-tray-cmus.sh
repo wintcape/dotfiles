@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Still working on porting this crap to Haskell
+
 # Ensure cmus player is running, then fetch player info
 if [[ ! $(pgrep cmus) ]]; then
     exit 0

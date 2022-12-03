@@ -2,10 +2,10 @@ module Tray.Alsa    (
                       AlsaTray(..)
                     ) where
 
--- Base
+-- XMobar: Base
 import  Xmobar
 
--- XMonad
+-- XMonad: Hooks
 import  XMonad.Hooks.StatusBar.PP   (xmobarColor)
 
 -- System
@@ -15,7 +15,7 @@ import  System.Process              (readProcess)
 import  Text.Printf                 (printf)
 import  Text.Regex.TDFA             ((=~))
 
--- Custom
+-- Custom: Colors
 import  Color.Colors                (colorBlack)
 
 

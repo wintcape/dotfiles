@@ -2,15 +2,15 @@ module Prompt.Man   (
                       manPrompt
                     ) where
 
--- Base
+-- XMonad: Base
 import XMonad
 import XMonad.Prelude
 
--- Prompt
+-- XMonad: Prompt
 import XMonad.Prompt
 import XMonad.Prompt.Shell              (split)
 
--- Actions
+-- XMonad: Actions
 import XMonad.Actions.OnScreen          (viewOnScreen)
 import XMonad.Actions.SpawnOn           (spawnOn)
 
@@ -20,7 +20,7 @@ import System.FilePath                  (dropExtensions, (</>))
 import System.IO
 import System.Process
 
--- Control flow
+-- Control
 import qualified Control.Exception as E
 
 

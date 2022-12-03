@@ -9,14 +9,14 @@ module Util.Run (
 
 import Config.Prelude
 
--- Base
+-- XMonad: Base
 import XMonad
 
--- Actions
+-- XMonad: Actions
 import XMonad.Actions.OnScreen  (viewOnScreen)
 import XMonad.Actions.SpawnOn   (spawnOn)
 
--- Util
+-- XMonad: Util
 import XMonad.Util.SpawnOnce    (spawnOnce, spawnOnOnce)
 
 
