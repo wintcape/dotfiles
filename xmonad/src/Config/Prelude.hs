@@ -10,6 +10,7 @@ module Config.Prelude   (
                         , myTerminal
                         , myBrowser
                         , myEditor
+                        , myAudioController
                         ) where
 
 
@@ -35,9 +36,11 @@ xappClassName ( XApp _ ( GUI s ) ) = s
 xappClassName ( XApp _ CLI )       = xappClassName myTerminal
 
 
-myTerminal :: XApp
-myBrowser  :: XApp
-myEditor   :: XApp
-myTerminal = XApp "alacritty" $ GUI "Alacritty"
-myBrowser  = XApp "firefox"   $ GUI "firefox"
-myEditor   = XApp "nvim"        CLI
+myTerminal        :: XApp
+myBrowser         :: XApp
+myEditor          :: XApp
+myAudioController :: XApp
+myTerminal        = XApp "alacritty" $ GUI "Alacritty"
+myBrowser         = XApp "firefox"   $ GUI "firefox"
+myEditor          = XApp "nvim"        CLI
+myAudioController = XApp "pulsemixer"  CLI

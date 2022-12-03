@@ -138,44 +138,45 @@ myStatusBar = statusBarProp
 myScratchpads :: [ NamedScratchpad ]
 myScratchpads =
     [
-      NS "sh"         spawnTerminal findTerminal manageTerminal
-    , NS "htop"       spawnHtop findHtop manageHtop
-    , NS "qalc"       spawnCalculator findCalculator manageCalculator
-    , NS "pulsemixer" spawnPulsemixer findPulsemixer managePulsemixer
+      NS "term" spawnTerminal        findTerminal        manageTerminal
+    , NS "top"  spawnTop             findTop             manageTop
+    , NS "calc" spawnCalculator      findCalculator      manageCalculator
+    , NS "ac"   spawnAudioController findAudioController manageAudioController
     ]
     where
         -- Terminal on demand
-        spawnTerminal   = ( xappCommand myTerminal ) ++ " --title 'Terminal on Demand!'"
-        findTerminal    = title =? "Terminal on Demand!"
-        manageTerminal  = customFloating $ W.RationalRect l t w h
-            where                        -- centered floating layout
+        spawnTerminal  = ( xappCommand myTerminal ) ++ " --title 'Terminal on Demand!'"
+        findTerminal   = title =? "Terminal on Demand!"
+        manageTerminal = customFloating $ W.RationalRect l t w h
+            where                        -- center floating layout
                 w = 0.9
                 h = 0.9
                 l = 0.05
                 t = 0.05 
         -- Resource monitor
-        spawnHtop   = ( xappCommand myTerminal ) ++ " --title 'htop' -e htop"
-        findHtop    = title =? "htop"
-        manageHtop  = customFloating $ W.RationalRect l t w h
-            where
+        spawnTop  = ( xappCommand myTerminal ) ++ " --title 'htop' -e htop"
+        findTop   = title =? "htop"
+        manageTop = customFloating $ W.RationalRect l t w h
+            where                    -- bottom floating layout
                 w = 1.0
                 h = 0.5
                 l = 0
                 t = 0.5 
         -- Calculator
-        spawnCalculator     = "qalculate-gtk"
-        findCalculator      = className =? "Qalculate-gtk"
-        manageCalculator    = customFloating $ W.RationalRect l t w h
-            where                            -- centered floating layout
+        spawnCalculator  = "qalculate-gtk"
+        findCalculator   = className =? "Qalculate-gtk"
+        manageCalculator = customFloating $ W.RationalRect l t w h
+            where                           -- center floating layout
                 w = 0.5
                 h = 0.5
                 l = 0.25
                 t = 0.25
         -- Audio controller 
-        spawnPulsemixer     = ( xappCommand myTerminal ) ++ " --title 'pulsemixer' -e pulsemixer"
-        findPulsemixer      = title =? "pulsemixer"
-        managePulsemixer    = customFloating $ W.RationalRect l t w h
-            where                            -- right floating layout
+        spawnAudioController  = ( xappCommand myTerminal ) ++ " --title '" ++ ( xappCommand myAudioController ) ++ "' -e "
+                             ++ ( xappCommand myAudioController )
+        findAudioController   = title =? ( xappCommand myAudioController )
+        manageAudioController = customFloating $ W.RationalRect l t w h
+            where                                -- top floating layout
                 w = 1.0
                 h = 0.2
                 l = 0
@@ -275,10 +276,10 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-C-s w"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) wikipedia )    -- query wikipedia
     , ( "M-C-s y"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) youtube )      -- query youtube
     , ( "M-C-s h"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) hoogle )       -- query hoogle
-    , ( "M-<Return>"   , namedScratchpadAction myScratchpads "sh" )                             -- toggle terminal
-    , ( "M-z"          , namedScratchpadAction myScratchpads "htop" )                           -- toggle htop
-    , ( "M-c"          , namedScratchpadAction myScratchpads "qalc" )                           -- toggle qalc
-    , ( "M-m"          , namedScratchpadAction myScratchpads "pulsemixer" )                     -- toggle pulsemixer
+    , ( "M-<Return>"   , namedScratchpadAction myScratchpads "term" )                           -- toggle terminal
+    , ( "M-z"          , namedScratchpadAction myScratchpads "top" )                            -- toggle htop
+    , ( "M-c"          , namedScratchpadAction myScratchpads "calc" )                           -- toggle qalc
+    , ( "M-m"          , namedScratchpadAction myScratchpads "ac" )                             -- toggle pulsemixer
 
     -- Audio controls
     , ( "M-<Page_Up>"   , spawn "amixer -D pulse sset Master 5%+" )                             -- master device volume+
