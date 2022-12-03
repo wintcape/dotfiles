@@ -5,7 +5,7 @@ Backups of configuration files for my makeshift home desktop environment.
 - **Editor**: neovim
 - **Browser**: Mozilla Firefox
 - **Audio controller**: pulsemixer
-- **Font**: AcPlus IBM VGA 8x16 (must be installed, see `fonts/`)
+- **Font**: AcPlus IBM VGA 8x16<br>(must be installed, see `fonts/`)
 
 ## Dependencies
 - X
@@ -31,4 +31,4 @@ $ <path>/xmonad/build && startx
 - OBS Studio
 - Audacity
 - Minecraft
-- Steam (must be pre-installed in chroot environment)
+- Steam<br>(must be pre-installed in chroot environment)
