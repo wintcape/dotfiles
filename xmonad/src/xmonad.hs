@@ -334,7 +334,7 @@ myMouseBindings _ = M.fromList $
                                 >>  windows W.shiftMaster ) )                                   -- M+MOUSE3: bring to front
             
     -- Soundfx
-    , ( ( 0, 9 ) , const $ spawn "cmus-remote --queue --file \"$(ls archive-i/soundpad/* | shuf -n 1)\"" )
+    , ( ( 0, 9 ) , const $ spawn "cmus-remote -C 'set continue=false';cmus-remote --queue --file \"$(ls archive-i/soundpad/* | shuf -n 1)\";" )
     , ( ( 0, 8 ) , const $ spawn "cmus-remote --queue --stop" )
             
     ]
@@ -462,8 +462,8 @@ myStartupHook =
         ( spawn $ "truncate -s 0 " ++ myLogFile )       -- clear log file
     >>  ( windows $ onlyOnScreen 0 "sys" )
     >>  ( windows $ onlyOnScreen 1 "vim" )
-    >>  ( runInTermElevatedOnce( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) ""  $ xappCommand  myEditor )
-    >>  ( spawnOnOnce "vim"                                                              $ xappCommand' myEditor )
+    >>  ( runInTermElevatedOnce ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) ""  $ xappCommand  myEditor )
+    >>  ( spawnOnOnce "vim"                                                               $ xappCommand' myEditor )
 
 
 myEventHook :: Event -> X All
