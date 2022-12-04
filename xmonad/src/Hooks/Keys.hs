@@ -17,7 +17,7 @@ import qualified    Data.Map as M                       (Map, lookup)
 
 
 
-data KeyState = Up | Down deriving ( Eq , Read )
+data KeyState = Up | Down deriving ( Eq , Read , Show )
 instance ExtensionClass KeyState where initialValue = Up
 
 
@@ -40,15 +40,21 @@ handle ( KeyEvent { ev_event_type = t , ev_state = m , ev_keycode = code } ) t' 
                 ( io $ keycodeToKeysym dpy code 0 )
             >>= \k ->
                     ( cleanMask m )
-                >>= \m' ->            
+                >>= \m' ->
                         let s = case () of
                                 () | t == keyRelease -> Up
                                    | t == keyPress   -> Down
                         in
-                                ( XS.get :: X KeyState )
-                            >>= \s' ->
-                                    case () of
-                                    () | s' == s   ->   return ()
-                                       | otherwise ->   ( XS.put ( s ) )
-                                                    >>  ( userCodeDef () $ whenJust ( M.lookup ( m' , k ) ks ) id )
+                            userCodeDef () $ whenKeyNot s $ M.lookup ( m' , k ) ks
+    where
+        whenKeyNot :: KeyState -> Maybe ( X () ) -> X ()
+        whenKeyNot s ( Just x ) =
+                ( XS.get :: X KeyState )
+            >>= \s' ->
+                    case () of
+                    () | s == s'   -> return ()
+                       | otherwise -> ( XS.put ( s ) )
+                                  >>  ( spawn $ "xdotool key End" ) -- simulated keypress fixes flickering bug
+                                  >>  x
+        whenKeyNot _ Nothing = return ()
 handle _ _ _ = return ()

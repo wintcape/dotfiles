@@ -7,7 +7,7 @@ module Util.Run (
                 , runInTermElevatedOnce
                 ) where
 
-import Config.Prelude
+import Config.Defaults
 
 -- XMonad: Base
 import XMonad

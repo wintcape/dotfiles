@@ -1,6 +1,6 @@
 #!/bin/sh
 
-kill $(pgrep steam-chroot)
+pkill -f steam-chroot
 umount --verbose $STEAM_DIR/proc
 umount --verbose $STEAM_DIR/sys
 umount --verbose $STEAM_DIR/dev

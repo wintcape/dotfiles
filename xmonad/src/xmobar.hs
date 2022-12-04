@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE PostfixOperators #-}
 
-import          Config.Prelude
+import          Config.Defaults
 
 -- Xmobar: Base
 import          Xmobar

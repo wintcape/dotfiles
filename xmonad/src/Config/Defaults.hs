@@ -1,4 +1,4 @@
-module Config.Prelude   (
+module Config.Defaults  (
                           XApp(..)
                         , XAppType(..)
                         , xappCommand

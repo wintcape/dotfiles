@@ -1,4 +1,4 @@
-import              Config.Prelude
+import              Config.Defaults
 
 -- XMonad: Base
 import              XMonad                   hiding ((|||), JumpToLayout(..))
@@ -224,8 +224,8 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-S-<Escape>" , io exitSuccess )                                                       -- kill X
     , ( "M-<F5>"       , runInTermElevated "Shutdown?" "--title 'Shutdown?'" "shutdown -h now" )-- elevated: shutdown
     , ( "M-<F6>"       , runInTermElevated "Reboot?"   "--title 'Reboot?'"   "reboot" )         -- elevated: reboot
-    , ( "M-<F7>"       , runInTermElevated "Launch sudo nvim?" "" $ xappCommand myEditor )      -- elevated: text editor
-
+    , ( "M-<F7>"       , runInTermElevated                                                      -- elevated: text editor
+                         ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) "" $ xappCommand myEditor )
     -- Workspace navigation
     , ( "<KP_Insert>"   , windows $ W.greedyView ( myWorkspaces !! 0 ) )                        -- move focus to workspace n
     , ( "<KP_End>"      , windows $ W.greedyView ( myWorkspaces !! 1 ) )
@@ -462,8 +462,8 @@ myStartupHook =
         ( spawn $ "truncate -s 0 " ++ myLogFile )       -- clear log file
     >>  ( windows $ onlyOnScreen 0 "sys" )
     >>  ( windows $ onlyOnScreen 1 "vim" )
-    >>  ( runInTermElevatedOnce "Launch sudo nvim?" "" $ xappCommand  myEditor )
-    >>  ( spawnOnOnce "vim"                            $ xappCommand' myEditor )
+    >>  ( runInTermElevatedOnce( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) ""  $ xappCommand  myEditor )
+    >>  ( spawnOnOnce "vim"                                                              $ xappCommand' myEditor )
 
 
 myEventHook :: Event -> X All
