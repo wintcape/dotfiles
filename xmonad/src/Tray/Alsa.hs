@@ -16,7 +16,7 @@ import  Text.Printf                 (printf)
 import  Text.Regex.TDFA             ((=~))
 
 -- Custom: Colors
-import  Color.Colors                (colorBlack)
+import  Config.Colors               (colorBlack)
 
 
 
@@ -33,8 +33,8 @@ instance Exec AlsaTray where
                                           ,               raw =~ "\\[off\\]"      :: Bool
                                           )
                     in
-                        let c = case muted of
-                                    True  -> c2
-                                    False -> c1
-                        in
-                            return $ xmobarColor c colorBlack ( printf "VOL: %4s" vol )
+                            let c = case muted of
+                                        True  -> c2
+                                        False -> c1
+                            in
+                                    return $ xmobarColor c colorBlack ( printf "VOL: %4s" vol )

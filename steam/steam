@@ -34,7 +34,7 @@ mount --verbose --rbind         /home/wintcape/.config/pulse    $STEAM_DIR/home/
 mount --verbose --make-rslave   $STEAM_DIR/home/steam/.config/pulse
 
 # Launch steam in chroot environment
-$ARCH chroot $STEAM_DIR su -c 'steam -screen-fullscreen 1 -screen-width 3840 -screen-height 2160' steam
+$ARCH chroot $STEAM_DIR su -c 'steam -no-cef-sandbox -screen-fullscreen 1 -screen-width 3840 -screen-height 2160' steam
 
 # Unmount
 umount --verbose $STEAM_DIR/proc

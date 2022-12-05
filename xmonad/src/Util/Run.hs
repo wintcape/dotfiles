@@ -22,14 +22,6 @@ import XMonad.Util.SpawnOnce    (spawnOnce, spawnOnOnce)
 
 
 
-commandStr :: String -> String -> String
-commandStr opt cmd = ( xappCommand myTerminal ) ++ " " ++ opt ++ " -e "
-                  ++ myPath ++ "script/eval \"" ++ cmd ++ "\" \"" ++ myLogFile ++ "\""
-
-elevatedCommandStr :: String -> String -> String -> String
-elevatedCommandStr msg opt cmd = commandStr opt ( "echo " ++ msg ++ ";sudo " ++ cmd ++ ";" )
-
-
 runInTerm   , runInTermOnce   ::                String -> String -> X ()
 runInTermOn , runInTermOnOnce :: WorkspaceId -> String -> String -> X ()
 runInTerm           opt cmd = spawn           $ commandStr opt cmd
@@ -43,3 +35,11 @@ runInTermElevated msg opt cmd =
     >>  ( spawnOn    "sys" $ elevatedCommandStr msg opt cmd )
 runInTermElevatedOnce msg opt cmd =
         spawnOnOnce "sys" $ elevatedCommandStr msg opt cmd
+
+
+commandStr :: String -> String -> String
+commandStr opt cmd = ( xappCommand myTerminal ) ++ " " ++ opt ++ " -e "
+                  ++ myPath ++ "script/eval \"" ++ cmd ++ "\" \"" ++ myLogFile ++ "\""
+
+elevatedCommandStr :: String -> String -> String -> String
+elevatedCommandStr msg opt cmd = commandStr opt ( "echo " ++ msg ++ ";sudo " ++ cmd ++ ";" )

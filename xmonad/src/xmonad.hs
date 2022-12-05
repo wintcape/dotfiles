@@ -22,7 +22,7 @@ import              XMonad.Hooks.StatusBar
 import              XMonad.Hooks.StatusBar.PP
 
 -- Custom: Hooks
-import              Hooks.Keys                      (KeyState(..), keyDownEventHook, keyUpEventHook)
+import              Hooks.Keys                      (keyDownEventHook, keyUpEventHook)
 
 -- XMonad: Layout modifiers
 import              XMonad.Layout.Fullscreen
@@ -61,7 +61,7 @@ import              Data.Ratio
 import qualified    Data.Map as M                   (Map, fromList)
 
 -- Custom: Common
-import              Color.Colors                    (XColor, colorWhite, colorGray, colorRed,
+import              Config.Colors                   (XColor, colorWhite, colorGray, colorRed,
                                                      colorDarkGray)
 
 
@@ -109,14 +109,14 @@ mySWNConfig = def
 --
 myFullLayout        = noBorders . avoidStruts $                  renamed [ Replace "full" ] Full
 myGridLayout        =             avoidStruts $ myFullLayout ||| renamed [ Replace "grid" ] Grid
-myFullscreenLayout  =          fullscreenFull $ myFullLayout ||| (noBorders $ Full)
+myFullscreenLayout  =          fullscreenFull $ myFullLayout ||| ( noBorders $ Full )
 
 
 -- Status bar (xmobar)
 --
 myStatusBar :: StatusBarConfig
 myStatusBar = statusBarProp
-    (  myPath ++ "../../.local/bin/xmobar" )
+    (  myPath ++ "../../.cache/xmonad/xmobar" )
     ( clickablePP $ filterOutWsPP [ "NSP" ] myXmobarPP )
     where
         myXmobarPP :: PP
@@ -159,9 +159,9 @@ myScratchpads =
         manageTop = customFloating $ W.RationalRect l t w h
             where                    -- bottom floating layout
                 w = 1.0
-                h = 0.5
+                h = 0.65
                 l = 0
-                t = 0.5 
+                t = 0.35
         -- Calculator
         spawnCalculator  = "qalculate-gtk"
         findCalculator   = className =? "Qalculate-gtk"
@@ -224,8 +224,7 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-S-<Escape>" , io exitSuccess )                                                       -- kill X
     , ( "M-<F5>"       , runInTermElevated "Shutdown?" "--title 'Shutdown?'" "shutdown -h now" )-- elevated: shutdown
     , ( "M-<F6>"       , runInTermElevated "Reboot?"   "--title 'Reboot?'"   "reboot" )         -- elevated: reboot
-    , ( "M-<F7>"       , runInTermElevated                                                      -- elevated: text editor
-                         ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) "" $ xappCommand myEditor )
+    
     -- Workspace navigation
     , ( "<KP_Insert>"   , windows $ W.greedyView ( myWorkspaces !! 0 ) )                        -- move focus to workspace n
     , ( "<KP_End>"      , windows $ W.greedyView ( myWorkspaces !! 1 ) )
@@ -262,9 +261,8 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-<F2>"        , runInTermElevated "Chroot steam?"                                     -- elevated: steam-chroot
                                             ( "--title 'steam-chroot'   --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
                                             "steam-chroot" )
-    , ( "M-<F3>"        , runInTermElevated "Unchroot steam?"                                   -- elevated: steam-unchroot
-                                            ( "--title 'steam-unchroot' --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
-                                            "steam-unchroot" )
+    , ( "M-<F3>"       , runInTermElevated                                                      -- elevated: text editor
+                         ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) "" $ xappCommand myEditor )    
 
     -- Prompt / Scratchpad
     , ( "M-S-<Return>" , terminalPrompt myPromptConfig )                                        -- launch run prompt
@@ -363,80 +361,80 @@ myManageHook = composeAll
         [
 
         -- Floaters! (lol)
-            className =? "confirm"                                                                      --> myDoFloat
-        ,   className =? "file_progress"                                                                --> myDoFloat
-        ,   className =? "dialog"                                                                       --> myDoFloat
-        ,   className =? "download"                                                                     --> myDoFloat
-        ,   className =? "error"                                                                        --> myDoFloat
-        ,   className =? "notification"                                                                 --> myDoFloat
-        ,   className =? "splash"                                                                       --> myDoFloat
-        ,   className =? "toolbar"                                                                      --> myDoFloat
+            className =? "confirm"                                                          --> myDoFloat
+        ,   className =? "file_progress"                                                    --> myDoFloat
+        ,   className =? "dialog"                                                           --> myDoFloat
+        ,   className =? "download"                                                         --> myDoFloat
+        ,   className =? "error"                                                            --> myDoFloat
+        ,   className =? "notification"                                                     --> myDoFloat
+        ,   className =? "splash"                                                           --> myDoFloat
+        ,   className =? "toolbar"                                                          --> myDoFloat
 
         -- Thunar
-        ,   className =? "Thunar"                                                                       --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
+        ,   className =? "Thunar"                                                           --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
 
         ,   (    className =? "Thunar"
-            <&&> title =? "Create New Folder" )                                                         --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
+            <&&> title     =? "Create New Folder" )                                         --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
 
         -- sys workspace
-        ,   className =? "Xmessage"                                                                     --> doHideIgnore
-                                                                                                    --  >>  doShift "sys"
+        ,   className =? "Xmessage"                                                         --> doHideIgnore
+                                                                                            --  >>  doShift "sys"
         ,   (      className =? ( xappClassName myTerminal )
-            <&&> ( title   =? "thunar"             <||> "thunar "             ?^ title
-            <||>   title   =? "vlc"                <||> "vlc "                ?^ title
-            <||>   title   =? "obs"                <||> "obs "                ?^ title
-            <||>   title   =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title
-            <||>   title   =? "audacity"           <||> "audacity "           ?^ title
-            <||>   title   =? "firefox"            <||> "firefox "            ?^ title ) )              --> doShift "sys"
+            <&&> ( title     =? "thunar"             <||> "thunar "             ?^ title
+            <||>   title     =? "vlc"                <||> "vlc "                ?^ title
+            <||>   title     =? "obs"                <||> "obs "                ?^ title
+            <||>   title     =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title
+            <||>   title     =? "audacity"           <||> "audacity "           ?^ title    
+            <||>   title     =? "firefox"            <||> "firefox "            ?^ title ) )--> doShift "sys"
 
         -- Image viewing / capture
-        ,   className =? "vlc"                                                                          --> liftX   ( windows $ viewOnScreen 1 "ful" )
-                                                                                                        >>  doShift "ful"
+        ,   className =? "vlc"                                                              --> liftX   ( windows $ viewOnScreen 1 "ful" )
+                                                                                            >>  doShift "ful"
 
-        ,   className =? "obs"                                                                          --> liftX   ( windows $ viewOnScreen 0 "rec" )
-                                                                                                        >>  doShift "rec"
+        ,   className =? "obs"                                                              --> liftX   ( windows $ viewOnScreen 0 "rec" )
+                                                                                            >>  doShift "rec"
 
         -- Minecraft
-        , "Minecraft" ?^ className                                                                      --> liftX   ( windows $ viewOnScreen 1 "ful" )
-                                                                                                        >>  liftX   ( windows $ viewOnScreen 0 "sys" )
-                                                                                                        >>  doShift "ful"
-        , ( className =? "minecraft-launcher" <||> className =? "Minecraft Launcher" )                  --> liftX   ( windows $ viewOnScreen 1 "ful" )
-                                                                                                        >>  liftX   ( windows $ viewOnScreen 0 "sys" )
-                                                                                                        >>  doShift "ful"
+        , "Minecraft" ?^ className                                                          --> liftX   ( windows $ viewOnScreen 1 "ful" )
+                                                                                            >>  liftX   ( windows $ viewOnScreen 0 "sys" )
+                                                                                            >>  doShift "ful"
+        , ( className =? "minecraft-launcher" <||> className =? "Minecraft Launcher" )      --> liftX   ( windows $ viewOnScreen 1 "ful" )
+                                                                                            >>  liftX   ( windows $ viewOnScreen 0 "sys" )
+                                                                                            >>  doShift "ful"
         ,   (    className =? "Minecraft Launcher"
-            <&&> title =? "Minecraft game output" )                                                     --> doShift "sys"
+            <&&> title     =? "Minecraft game output" )                                     --> doShift "sys"
 
 
         -- Audacity
-        ,   className =? "Audacity"                                                                     --> liftX   ( windows $ viewOnScreen 0 "rec" )
-                                                                                                        >>  doShift "rec"
+        ,   className =? "Audacity"                                                         --> liftX   ( windows $ viewOnScreen 1 "rec" )
+                                                                                            >>  doShift "rec"
         ,   (    className =? "Audacity"
-            <&&> title =? "Select one or more files" )                                                  --> myDoFloat
+            <&&> title     =? "Select one or more files" )                                  --> myDoFloat
 
         -- Steam
-        ,   className =? "Steam"                                                                        --> liftX   ( windows $ viewOnScreen 1 "ful" )
-                                                                                                        >>  liftX   ( windows $ viewOnScreen 0 "sys" )
-                                                                                                        >>  doShift "ful"
+        ,   className =? "Steam"                                                            --> liftX   ( windows $ viewOnScreen 1 "ful" )
+                                                                                            >>  liftX   ( windows $ viewOnScreen 0 "sys" )
+                                                                                            >>  doShift "ful"
         ,   (      className =? "Steam"
-            <&&> ( title =? "Friends List"
-            <||>   title =? "Steam - News" ) )                                                          --> doHideIgnore
+            <&&> ( title     =? "Friends List"
+            <||>   title     =? "Steam - News" ) )                                          --> doHideIgnore
 
-        ,   className =? "csgo_linux64"                                                                 --> doShift "ful"
-                                                                                                        >>  doSink
+        ,   className =? "csgo_linux64"                                                     --> doShift "ful"
+                                                                                            >>  doSink
         
         -- Firefox
         ,   (    className =? "firefox"
-            <&&> title =? "Mozilla Firefox" )                                                           --> doShift' "web"
+            <&&> title     =? "Mozilla Firefox" )                                           --> doShift' "web"
 
         ,   (      className =? "firefox"
-            <&&> ( title =? "File Upload"
-            <||>   title =? "Open File"
-            <||>   title =? "Library"
-            <||>   title =? "Choose Application" ) )                                                    --> myDoFloat
+            <&&> ( title     =? "File Upload"
+            <||>   title     =? "Open File"
+            <||>   title     =? "Library"
+            <||>   title     =? "Choose Application" ) )                                    --> myDoFloat
         
         -- Custom terminals
         ,   (      className =? ( xappClassName myTerminal )
-            <&&> ( title =? "cmus" <||> "cmus " ?^ title ) )                                            --> doShift' "mus"
+            <&&> ( title     =? "cmus" <||> "cmus " ?^ title ) )                            --> doShift' "mus"
 
         ] <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> manageSpawn
  

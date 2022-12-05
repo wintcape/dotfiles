@@ -13,7 +13,7 @@ import          XMonad.Hooks.StatusBar.PP   (wrap, xmobarColor)
 import          Tray.Alsa 
 
 -- Custom: Colors
-import          Color.Colors
+import          Config.Colors
 
 
 

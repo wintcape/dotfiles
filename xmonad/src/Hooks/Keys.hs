@@ -1,6 +1,5 @@
 module Hooks.Keys   (
-                      KeyState(..)
-                    , keyDownEventHook
+                      keyDownEventHook
                     , keyUpEventHook
                     ) where
 

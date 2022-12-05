@@ -33,4 +33,16 @@ mount --verbose --make-rslave   $STEAM_DIR/home/steam/.pulse
 mount --verbose --rbind         /home/wintcape/.config/pulse    $STEAM_DIR/home/steam/.config/pulse
 mount --verbose --make-rslave   $STEAM_DIR/home/steam/.config/pulse
 
-exec -a steam-chroot alacritty --title 'steam-chroot' --config-file /home/wintcape/.config/alacritty/alacritty-chroot.yml -e $ARCH chroot $STEAM_DIR /bin/bash
+exec -a steam-chroot alacritty --config-file /home/wintcape/.config/alacritty/alacritty-chroot.yml -e $ARCH chroot $STEAM_DIR /bin/bash
+
+# Unmount
+umount --verbose $STEAM_DIR/proc
+umount --verbose $STEAM_DIR/sys
+umount --verbose $STEAM_DIR/dev
+umount --verbose $STEAM_DIR/run
+umount --verbose $STEAM_DIR/tmp
+umount --verbose $STEAM_DIR/var/db/repos/gentoo
+umount --verbose $STEAM_DIR/var/lib/dbus
+umount --verbose $STEAM_DIR$XDG_RUNTIME_DIR
+umount --verbose $STEAM_DIR/home/steam/.pulse
+umount --verbose $STEAM_DIR/home/steam/.config/pulse

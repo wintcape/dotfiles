@@ -18,7 +18,6 @@ stack build || exit 1
 
 # Create a hard link at the requested destination, replacing any existing one.
 ln -f -T $(stack exec -- which $EXE_NAME_XMONAD) $HOME/.cache/xmonad/xmonad-x86_64-linux
-ln -f -T $(stack exec -- which $EXE_NAME_XMOBAR) $HOME/.local/bin/xmobar
 
 # Build file cleanup.
 rm -rf ./src/*.hi ./src/*.o

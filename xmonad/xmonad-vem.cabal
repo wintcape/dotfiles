@@ -5,13 +5,13 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           xmonad-vem
-version:        0.0.10
+version:        0.0.11
 build-type:     Simple
 
 executable xmobar
   main-is: xmobar.hs
   other-modules:
-      Color.Colors
+      Config.Colors
       Config.Defaults
       Hooks.Keys
       Prompt.Man
@@ -41,7 +41,7 @@ executable xmobar
 executable xmonad
   main-is: xmonad.hs
   other-modules:
-      Color.Colors
+      Config.Colors
       Config.Defaults
       Hooks.Keys
       Prompt.Man
