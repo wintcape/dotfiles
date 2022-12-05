@@ -1,4 +1,4 @@
-Backups of configuration files for my makeshift home desktop environment.
+Backups of configuration files for my two-monitor, makeshift home desktop environment.
 
 ## Defaults
 - **Terminal**: Alacritty
