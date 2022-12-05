@@ -14,6 +14,7 @@ For a two monitor setup.
 - pulseaudio
 - dbus
 - sudo
+- xmonad*<br>(only used as a launcher for a custom build of `xmonad-X86_64-linux`. Not needed if using custom launcher)
 
 ## To build and launch
 ```
