@@ -1,11 +1,13 @@
-Backups of configuration files for my makeshift home desktop environment. For a two-monitor setup.
+Backups of configuration files for my makeshift home desktop environment.
+<br><br>
+For a two monitor setup.
 
 ## Defaults
 - **Terminal**: Alacritty
 - **Editor**: neovim
 - **Browser**: Mozilla Firefox
 - **Audio controller**: pulsemixer
-- **Font**: AcPlus IBM VGA 8x16<br>(must be installed, see `fonts/`)
+- **Font**: AcPlus IBM VGA 8x16<br>(must be pre-installed, see `fonts/`)
 
 ## Dependencies
 - X
@@ -31,4 +33,5 @@ $ <path>/xmonad/build && startx
 - OBS Studio
 - Audacity
 - Minecraft
+- [nbted](https://github.com/C4K3/nbted) (must be pre-installed) and `mcfunction` (builtin) plugins for neovim<br>(for editing Minecraft game files in neovim)
 - Steam<br>(must be pre-installed in chroot environment)
