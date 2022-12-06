@@ -21,7 +21,6 @@ Plug 'https://github.com/vim-airline/vim-airline'               " Status bar
 Plug 'https://github.com/preservim/nerdtree'                    " Directory explorer
 Plug 'https://github.com/tpope/vim-commentary'                  " Comments for gcc, gc
 Plug 'https://github.com/tc50cal/vim-terminal'                  " Vim terminal
-Plug 'https://github.com/terryma/vim-multiple-cursors'          " Multiple cursors
 Plug 'https://github.com/preservim/tagbar'                      " Tagbar
 Plug 'https://github.com/neoclide/coc.nvim'                     " Code autocompletion
 Plug 'rubixninja314/vim-mcfunction'                             " mcfunction syntax

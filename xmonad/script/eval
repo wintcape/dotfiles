@@ -1,2 +1,2 @@
 #!/bin/sh
-((eval $1) 2> >(tee -a >(cat 1>>$2))) || nvim '+normal G' $2
+((eval $1) 2> >(tee >(cat 1>>$2))) || nvim '+normal G' $2

@@ -7,6 +7,7 @@ import qualified    XMonad.StackSet as W
 
 -- XMonad: Actions
 import              XMonad.Actions.CopyWindow       (kill1)
+import              XMonad.Actions.CycleWS          (nextScreen, shiftNextScreen)
 import              XMonad.Actions.OnScreen         (onlyOnScreen, viewOnScreen)
 import              XMonad.Actions.Search           (dictionary, duckduckgo, google, hoogle,
                                                      thesaurus, wikipedia, youtube)
@@ -226,6 +227,7 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-<F6>"       , runInTermElevated "Reboot?"   "--title 'Reboot?'"   "reboot" )         -- elevated: reboot
     
     -- Workspace navigation
+    , ( "<KP_Enter>"    , nextScreen )                                                          -- move focus to opposite display
     , ( "<KP_Insert>"   , windows $ W.greedyView ( myWorkspaces !! 0 ) )                        -- move focus to workspace n
     , ( "<KP_End>"      , windows $ W.greedyView ( myWorkspaces !! 1 ) )
     , ( "<KP_Down>"     , windows $ W.greedyView ( myWorkspaces !! 2 ) )
@@ -233,6 +235,7 @@ myKeyBindings conf = mkKeymap conf $
     , ( "<KP_Left>"     , windows $ W.greedyView ( myWorkspaces !! 4 ) )
     , ( "<KP_Begin>"    , windows $ W.greedyView ( myWorkspaces !! 5 ) )
     , ( "<KP_Right>"    , windows $ W.greedyView ( myWorkspaces !! 6 ) )
+    , ( "M-<KP_Enter>"  , shiftNextScreen )                                                     -- shift focused window to workspace on opposite display
     , ( "M-<KP_Insert>" , windows $ W.shift      ( myWorkspaces !! 0 ) )                        -- shift focused window to workspace n
     , ( "M-<KP_End>"    , windows $ W.shift      ( myWorkspaces !! 1 ) )
     , ( "M-<KP_Down>"   , windows $ W.shift      ( myWorkspaces !! 2 ) )
@@ -248,8 +251,8 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-="         , sendMessage Expand )                                                    -- expand master window
     , ( "M-q"         , kill1 )                                                                 -- kill current window
     , ( "M-S-q"       , killAll )                                                               -- kill all windows in current workspace
-    , ( "M-t"         , withFocused $ windows . W.sink )                                        -- Push floating window back to tile
-    , ( "M-S-t"       , sinkAll )                                                               -- Push ALL floating windows to tile
+    , ( "M-t"         , withFocused $ windows . W.sink )                                        -- push floating window back to tile
+    , ( "M-S-t"       , sinkAll )                                                               -- push all floating windows to tile
     
     -- Application spawning
     , ( "M-M1-<Return>" , spawn         $ xappCommand myTerminal )                              -- alacritty
@@ -261,19 +264,19 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-<F2>"        , runInTermElevated "Chroot steam?"                                     -- elevated: steam-chroot
                                             ( "--title 'steam-chroot'   --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
                                             "steam-chroot" )
-    , ( "M-<F3>"       , runInTermElevated                                                      -- elevated: text editor
+    , ( "M-<F7>"        , runInTermElevated                                                     -- elevated: text editor
                          ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) "" $ xappCommand myEditor )    
 
     -- Prompt / Scratchpad
     , ( "M-S-<Return>" , terminalPrompt myPromptConfig )                                        -- launch run prompt
     , ( "M-C-m"        , manPrompt      myPromptConfig "doc")                                   -- launch man prompt
-    , ( "M-C-s s"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) google )       -- query google
-    , ( "M-C-s a"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) duckduckgo )   -- query duckduckgo
-    , ( "M-C-s d"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) dictionary )   -- query dictionary
-    , ( "M-C-s t"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) thesaurus )    -- query thesaurus
-    , ( "M-C-s w"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) wikipedia )    -- query wikipedia
-    , ( "M-C-s y"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) youtube )      -- query youtube
-    , ( "M-C-s h"      , searchPrompt   myPromptConfig ( xappCommand myBrowser ) hoogle )       -- query hoogle
+    , ( "M-C-s"        , searchPrompt   myPromptConfig ( xappCommand myBrowser ) google )       -- query google
+    , ( "M-C-a"        , searchPrompt   myPromptConfig ( xappCommand myBrowser ) duckduckgo )   -- query duckduckgo
+    , ( "M-C-d"        , searchPrompt   myPromptConfig ( xappCommand myBrowser ) dictionary )   -- query dictionary
+    , ( "M-C-t"        , searchPrompt   myPromptConfig ( xappCommand myBrowser ) thesaurus )    -- query thesaurus
+    , ( "M-C-w"        , searchPrompt   myPromptConfig ( xappCommand myBrowser ) wikipedia )    -- query wikipedia
+    , ( "M-C-y"        , searchPrompt   myPromptConfig ( xappCommand myBrowser ) youtube )      -- query youtube
+    , ( "M-C-h"        , searchPrompt   myPromptConfig ( xappCommand myBrowser ) hoogle )       -- query hoogle
     , ( "M-<Return>"   , namedScratchpadAction myScratchpads "term" )                           -- toggle terminal
     , ( "M-z"          , namedScratchpadAction myScratchpads "top" )                            -- toggle htop
     , ( "M-c"          , namedScratchpadAction myScratchpads "calc" )                           -- toggle qalc
@@ -291,8 +294,8 @@ myKeyBindings conf = mkKeymap conf $
    
     -- Dummy entries required to pass keys to XMonad
     -- (see myKeyUpBindings, myKeyDownBindings)
-    , ( "M-<Space>" , return () )
     , ( "M-`"       , return () )
+    , ( "M-<Space>" , return () )
 
     ]
 
@@ -309,7 +312,7 @@ myKeyDownBindings :: XConfig l -> M.Map ( KeyMask , KeySym ) ( X () )
 myKeyDownBindings conf = mkKeymap conf $
     [
       ( "M-`"       , sendMessage $ JumpToLayout "grid" )                                       -- switch to grid layout
-    , ( "M-<Space>" , sendMessage   NextLayout )                                                -- switch to next layout
+    , ( "M-<Space>" , sendMessage   NextLayout )                                                -- toggle current layout
     ]
 
 
@@ -332,8 +335,8 @@ myMouseBindings _ = M.fromList $
                                 >>  windows W.shiftMaster ) )                                   -- M+MOUSE3: bring to front
             
     -- Soundfx
-    , ( ( 0, 9 ) , const $ spawn "cmus-remote -C 'set continue=false';cmus-remote --queue --file \"$(ls archive-i/soundpad/* | shuf -n 1)\";" )
-    , ( ( 0, 8 ) , const $ spawn "cmus-remote --queue --stop" )
+    --, ( ( 0, 9 ) , const $ spawn "cmus-remote -C 'set continue=false';cmus-remote --queue --file \"$(ls archive-i/soundpad/* | shuf -n 1)\";" )
+    --, ( ( 0, 8 ) , const $ spawn "cmus-remote --queue --stop" )
             
     ]
 
