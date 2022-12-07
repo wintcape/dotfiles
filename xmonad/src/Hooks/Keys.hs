@@ -16,7 +16,7 @@ import qualified    Data.Map as M                       (Map, lookup)
 
 
 
-data KeyState = Up | Down deriving ( Eq , Read , Show )
+data KeyState = Up | Down deriving ( Eq , Read )
 instance ExtensionClass KeyState where initialValue = Up
 
 

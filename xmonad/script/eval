@@ -1,2 +1,2 @@
 #!/bin/sh
-((eval $1) 2> >(tee >(cat 1>>$2))) || $EDITOR '+normal G' $2
+((eval $1) 2> >(tee >(cat 1>>$2))) || (echo "[$1]:" >>$2 && $EDITOR '+normal G' $2)
