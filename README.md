@@ -35,9 +35,10 @@ For a two monitor setup.
 - Steam (must be pre-installed in chroot environment)
 
 ## Preparing the environment
-1. Extract the repository into the desired `$HOME/.config` directory on the host system.
-2. Move `.bash_profile`, `.bashrc`, and `.xinitrc` into the `$HOME` directory.
-3. Edit `$HOME/.config/xmonad/src/Config/Defaults.hs` to match `$HOME` path and desired defaults.
+1. Ensure all dependencies are installed on the host system.
+2. Extract the repository into the desired `$HOME/.config` directory on the host system.
+3. Move `.bash_profile`, `.bashrc`, and `.xinitrc` into the `$HOME` directory.
+4. Edit `$HOME/.config/xmonad/src/Config/Defaults.hs` to match `$HOME` path and desired defaults.
 
 ## Building XMonad
 The main application that acts as the window manager for X is a custom build of [XMonad](https://xmonad.org/).<br>
