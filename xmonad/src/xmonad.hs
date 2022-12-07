@@ -316,8 +316,6 @@ myKeyDownBindings conf = mkKeymap conf $
     ]
 
 
-
-
 myMouseBindings :: XConfig l -> M.Map ( ButtonMask , Button ) ( Window -> X () )
 myMouseBindings _ = M.fromList $
     [
