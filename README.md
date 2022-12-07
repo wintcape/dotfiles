@@ -42,7 +42,7 @@ For a two monitor setup.
 
 ## Building XMonad
 The main application that acts as the window manager for X is a custom build of [XMonad](https://xmonad.org/).<br>
-1. Edit `./xmonad/src/Config/Defaults.hs` to match `$HOME` path and desired defaults.
+1. Edit `$HOME/.config/xmonad/src/Config/Defaults.hs` to match `$HOME` path and desired defaults.
 2. Perform the build:
 ```
 $HOME/.config/xmonad/build
