@@ -3,8 +3,7 @@
 ################################################################################
 
 SRC_DIR=$HOME/.config/xmonad
-EXE_NAME_XMONAD=xmonad
-EXE_NAME_XMOBAR=xmobar
+EXE_NAME=xmonad
 
 ################################################################################
 
@@ -17,7 +16,7 @@ unset STACK_YAML
 stack build || exit 1
 
 # Create a hard link at the requested destination, replacing any existing one.
-ln -f -T $(stack exec -- which $EXE_NAME_XMONAD) $HOME/.cache/xmonad/xmonad-x86_64-linux
+ln -f -T $(stack exec -- which $EXE_NAME) $HOME/.cache/xmonad/xmonad-x86_64-linux
 
 # Build file cleanup.
 rm -rf ./src/*.hi ./src/*.o
