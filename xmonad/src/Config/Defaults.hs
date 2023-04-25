@@ -11,6 +11,7 @@ module Config.Defaults  (
                         , myBrowser
                         , myEditor
                         , myAudioController
+                        , myPDFViewer
                         ) where
 
 
@@ -40,7 +41,9 @@ myTerminal        :: XApp
 myBrowser         :: XApp
 myEditor          :: XApp
 myAudioController :: XApp
+myPDFViewer       :: XApp
 myTerminal        = XApp "alacritty" $ GUI "Alacritty"
 myBrowser         = XApp "firefox"   $ GUI "firefox"
 myEditor          = XApp "nvim"        CLI
 myAudioController = XApp "pulsemixer"  CLI
+myPDFViewer       = XApp "zathura"   $ GUI "Zathura"

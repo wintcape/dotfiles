@@ -30,7 +30,9 @@ For a two monitor setup.
 - OBS Studio
 - Audacity
 - Minecraft
-- [coc.nvim](https://github.com/neoclide/coc.nvim) (language servers supported for Haskell, C/C++, bash, Typescript)
+- latexmk
+- Zathura
+- [coc.nvim](https://github.com/neoclide/coc.nvim) (language servers supported for Haskell, C/C++, bash, Typescript, LaTeX)
 - [nbted](https://github.com/C4K3/nbted) (must be pre-installed) and [mcfunction](https://minecraft.fandom.com/wiki/Function_(Java_Edition)) (builtin) plugins for neovim<br>(for editing Minecraft game files in neovim)
 - Steam (must be pre-installed in chroot environment)
 

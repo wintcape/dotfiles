@@ -1,57 +1,93 @@
 import              Config.Defaults
 
 -- XMonad: Base
-import              XMonad                   hiding ((|||), JumpToLayout(..))
+import              XMonad                       hiding ( ( ||| )
+                                                        , JumpToLayout ( .. )
+                                                        )
 import              XMonad.Prelude
 import qualified    XMonad.StackSet as W
 
 -- XMonad: Actions
-import              XMonad.Actions.CopyWindow       (kill1)
-import              XMonad.Actions.CycleWS          (nextScreen, shiftNextScreen)
-import              XMonad.Actions.OnScreen         (onlyOnScreen, viewOnScreen)
-import              XMonad.Actions.Search           (dictionary, duckduckgo, google, hoogle,
-                                                     thesaurus, wikipedia, youtube)
-import              XMonad.Actions.SpawnOn          (manageSpawn, spawnOn)
-import              XMonad.Actions.UpdateFocus      (focusOnMouseMove)
-import              XMonad.Actions.WithAll          (sinkAll, killAll)
+import              XMonad.Actions.CopyWindow           ( kill1 )
+import              XMonad.Actions.CycleWS              ( nextScreen
+                                                        , shiftNextScreen
+                                                        )
+import              XMonad.Actions.OnScreen             ( onlyOnScreen
+                                                        , viewOnScreen
+                                                        )
+import              XMonad.Actions.Search               ( dictionary
+                                                        , duckduckgo
+                                                        , google
+                                                        , hoogle
+                                                        , thesaurus
+                                                        , wikipedia
+                                                        , youtube
+                                                        )
+import              XMonad.Actions.SpawnOn              ( manageSpawn
+                                                        , spawnOn
+                                                        )
+import              XMonad.Actions.UpdateFocus          ( focusOnMouseMove )
+import              XMonad.Actions.WithAll              ( sinkAll
+                                                        , killAll
+                                                        )
 
 -- XMonad: Hooks
 import              XMonad.Hooks.EwmhDesktops
-import              XMonad.Hooks.ManageDocks        (avoidStruts, docks, manageDocks)
-import              XMonad.Hooks.ManageHelpers      (doHideIgnore, doRectFloat, doSink)
+import              XMonad.Hooks.ManageDocks            ( avoidStruts
+                                                        , docks
+                                                        , manageDocks
+                                                        )
+import              XMonad.Hooks.ManageHelpers          ( ( /=? )
+                                                        , currentWs
+                                                        , doHideIgnore
+                                                        , doRectFloat
+                                                        , doSink
+                                                        )
 import              XMonad.Hooks.StatusBar
 import              XMonad.Hooks.StatusBar.PP
 
 -- Custom: Hooks
-import              Hooks.Keys                      (keyDownEventHook, keyUpEventHook)
+import              Hooks.Keys                          ( keyDownEventHook
+                                                        , keyUpEventHook
+                                                        )
 
 -- XMonad: Layout modifiers
 import              XMonad.Layout.Fullscreen
-import              XMonad.Layout.Grid
-import              XMonad.Layout.LayoutCombinators ((|||), JumpToLayout(..))
+import              XMonad.Layout.GridVariants          ( Orientation ( .. )
+                                                        , SplitGrid ( .. )
+                                                        )
+import              XMonad.Layout.LayoutCombinators     ( ( ||| )
+                                                        , JumpToLayout ( .. )
+                                                        )
 import              XMonad.Layout.NoBorders
 import              XMonad.Layout.PerWorkspace
-import              XMonad.Layout.Renamed           (Rename(Replace), renamed)
+import              XMonad.Layout.Renamed               ( Rename ( Replace )
+                                                        , renamed
+                                                        )
 import              XMonad.Layout.ShowWName
+import              XMonad.Layout.TwoPane
 
 -- XMonad: Prompt
 import              XMonad.Prompt
 
 -- Custom: Prompt
-import              Prompt.Man                      (manPrompt)
-import              Prompt.Search                   (searchPrompt)
-import              Prompt.Terminal                 (terminalPrompt)
+import              Prompt.Man                          ( manPrompt )
+import              Prompt.Search                       ( searchPrompt )
+import              Prompt.Terminal                     ( terminalPrompt )
 
 -- XMonad: Util
-import              XMonad.Util.ClickableWorkspaces (clickablePP)
-import              XMonad.Util.EZConfig            (mkKeymap)
+import              XMonad.Util.ClickableWorkspaces     ( clickablePP )
+import              XMonad.Util.EZConfig                ( mkKeymap )
 import              XMonad.Util.NamedScratchpad
-import              XMonad.Util.SpawnOnce           (spawnOnOnce)
+import              XMonad.Util.SpawnOnce               ( spawnOnOnce )
 import qualified    XMonad.Util.ExtensibleState as XS
 
 -- Custom: Util
-import              Util.Run                        (runInTermOn, runInTermElevated, runInTermOnOnce,
-                                                     runInTermElevatedOnce)
+import              Util.Run                            ( runInTermOn
+                                                        , runInTermElevated
+                                                        , runInTermOnOnce
+                                                        , runInTermElevatedOnce
+                                                        )
 
 -- System
 import              System.Exit
@@ -59,11 +95,17 @@ import              System.Exit
 -- Data
 import              Data.Monoid
 import              Data.Ratio
-import qualified    Data.Map as M                   (Map, fromList)
+import qualified    Data.Map as M                       ( Map
+                                                        , fromList
+                                                        )
 
 -- Custom: Common
-import              Config.Colors                   (XColor, colorWhite, colorGray, colorRed,
-                                                     colorDarkGray)
+import              Config.Colors                       ( XColor
+                                                        , colorWhite
+                                                        , colorGray
+                                                        , colorRed
+                                                        , colorDarkGray
+                                                        )
 
 
 
@@ -108,9 +150,17 @@ mySWNConfig = def
 
 -- Layouts
 --
-myFullLayout        = noBorders . avoidStruts $                  renamed [ Replace "full" ] Full
-myGridLayout        =             avoidStruts $ myFullLayout ||| renamed [ Replace "grid" ] Grid
-myFullscreenLayout  =          fullscreenFull $ myFullLayout ||| ( noBorders $ Full )
+myFullLayout        = noBorders . avoidStruts $ 
+                        renamed [ Replace "full" ] Full
+myGridLayout        = avoidStruts $
+                            myFullLayout
+                        ||| renamed [ Replace "grid" ] ( SplitGrid L 1 1 ( 1 % 2 ) ( 1 % 1 ) ( 1 % 20 ) )
+                        |||                            ( SplitGrid T 1 1 ( 1 % 2 ) ( 1 % 1 ) ( 1 % 20 ) )
+myFullscreenLayout  = fullscreenFull $
+                            myFullLayout
+                        ||| ( noBorders $ Full )
+--myPdfLayout         = avoidStruts $ 
+--                        renamed [ Replace "pdf" ] $ TwoPane ( 1 % 2 ) ( 1 % 2 )
 
 
 -- Status bar (xmobar)
@@ -247,6 +297,7 @@ myKeyBindings conf = mkKeymap conf $
     -- Current workspace
     , ( "M-S-<Space>" , refresh )                                                               -- reset to default layout
     , ( "M-<Tab>"     , windows W.focusDown )                                                   -- move focus to next window
+    , ( "M-S-<Tab>"   , windows W.swapMaster )                                                  -- swap current window with master window
     , ( "M--"         , sendMessage Shrink )                                                    -- shrink master window
     , ( "M-="         , sendMessage Expand )                                                    -- expand master window
     , ( "M-q"         , kill1 )                                                                 -- kill current window
@@ -375,18 +426,22 @@ myManageHook = composeAll
         ,   className =? "Thunar"                                                           --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
 
         ,   (    className =? "Thunar"
-            <&&> title     =? "Create New Folder" )                                         --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
+            <&&> title     =? "Create New Folder"
+            )                                                                               --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
 
         -- sys workspace
         ,   className =? "Xmessage"                                                         --> doHideIgnore
                                                                                             --  >>  doShift "sys"
         ,   (      className =? ( xappClassName myTerminal )
-            <&&> ( title     =? "thunar"             <||> "thunar "             ?^ title
-            <||>   title     =? "vlc"                <||> "vlc "                ?^ title
-            <||>   title     =? "obs"                <||> "obs "                ?^ title
-            <||>   title     =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title
-            <||>   title     =? "audacity"           <||> "audacity "           ?^ title    
-            <||>   title     =? "firefox"            <||> "firefox "            ?^ title ) )--> doShift "sys"
+            <&&> (    title =? "thunar"             <||> "thunar "             ?^ title
+            <||>      title =? "vlc"                <||> "vlc "                ?^ title
+            <||>      title =? "obs"                <||> "obs "                ?^ title
+            <||>      title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title
+            <||>      title =? "audacity"           <||> "audacity "           ?^ title    
+            <||>      title =? "firefox"            <||> "firefox "            ?^ title
+            <||>      title =? ( xappCommand myPDFViewer )
+            <||>      ( ( xappCommand myPDFViewer ) ++ " " ) ?^ title
+            ))                                                                              --> doShift "sys"
 
         -- Image viewing / capture
         ,   className =? "vlc"                                                              --> liftX   ( windows $ viewOnScreen 1 "ful" )
@@ -397,20 +452,24 @@ myManageHook = composeAll
 
         -- Minecraft
         , "Minecraft" ?^ className                                                          --> liftX   ( windows $ viewOnScreen 1 "ful" )
-                                                                                            >>  liftX   ( windows $ viewOnScreen 0 "sys" )
+                                                                                           >>  liftX   ( windows $ viewOnScreen 0 "sys" )
                                                                                             >>  doShift "ful"
-        , ( className =? "minecraft-launcher" <||> className =? "Minecraft Launcher" )      --> liftX   ( windows $ viewOnScreen 1 "ful" )
+        , (    className =? "minecraft-launcher"
+          <||> className =? "Minecraft Launcher"
+          )                                                                                 --> liftX   ( windows $ viewOnScreen 1 "ful" )
                                                                                             >>  liftX   ( windows $ viewOnScreen 0 "sys" )
                                                                                             >>  doShift "ful"
         ,   (    className =? "Minecraft Launcher"
-            <&&> title     =? "Minecraft game output" )                                     --> doShift "sys"
+            <&&> title     =? "Minecraft game output"
+            )                                                                               --> doShift "sys"
 
 
         -- Audacity
         ,   className =? "Audacity"                                                         --> liftX   ( windows $ viewOnScreen 1 "rec" )
                                                                                             >>  doShift "rec"
         ,   (    className =? "Audacity"
-            <&&> title     =? "Select one or more files" )                                  --> myDoFloat
+            <&&> title     =? "Select one or more files"
+            )                                                                               --> myDoFloat
 
         -- Steam
         ,   className =? "Steam"                                                            --> liftX   ( windows $ viewOnScreen 1 "ful" )
@@ -418,25 +477,40 @@ myManageHook = composeAll
                                                                                             >>  doShift "ful"
         ,   (      className =? "Steam"
             <&&> ( title     =? "Friends List"
-            <||>   title     =? "Steam - News" ) )                                          --> doHideIgnore
+            <||>   title     =? "Steam - News"
+            ))                                                                              --> doHideIgnore
 
         ,   className =? "csgo_linux64"                                                     --> doShift "ful"
                                                                                             >>  doSink
         
         -- Firefox
         ,   (    className =? "firefox"
-            <&&> title     =? "Mozilla Firefox" )                                           --> doShift' "web"
+            <&&> title     =? "Mozilla Firefox"
+            )                                                                               --> doShift' "web"
 
         ,   (      className =? "firefox"
             <&&> ( title     =? "File Upload"
             <||>   title     =? "Open File"
             <||>   title     =? "Library"
-            <||>   title     =? "Choose Application" ) )                                    --> myDoFloat
+            <||>   title     =? "Choose Application"
+            ))                                                                              --> myDoFloat
         
         -- Custom terminals
         ,   (      className =? ( xappClassName myTerminal )
-            <&&> ( title     =? "cmus" <||> "cmus " ?^ title ) )                            --> doShift' "mus"
-
+            <&&> ( title     =? "cmus" <||> "cmus " ?^ title
+            ))                                                                              --> doShift' "mus"
+        ,   className =? "vken"                                                             --> doFloat
+        
+        -- PDF viewer
+        ,   (    className =? ( xappClassName myPDFViewer )
+            <&&> currentWs =? "vim"
+            )                                                                               --> liftX ( sendMessage $ JumpToLayout "grid" )
+                                                                                            >>  doSink
+        ,   (    className =? ( xappClassName myPDFViewer )
+            <&&> currentWs /=? "vim"
+            )                                                                               --> liftX ( windows $ viewOnScreen 0 "doc" )
+                                                                                            >>  doShift "doc"
+        
         ] <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> manageSpawn
  
         where
@@ -455,6 +529,8 @@ myManageHook = composeAll
             -- Variation of doShift that switches to the workspace
             doShift' = doF . liftM2 (.) W.greedyView W.shift
 
+            -- ifWorkspace
+
 
 myStartupHook :: X ()
 myStartupHook =
@@ -463,6 +539,7 @@ myStartupHook =
     >>  ( windows $ onlyOnScreen 1 "vim" )
     >>  ( runInTermElevatedOnce ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) ""  $ xappCommand  myEditor )
     >>  ( spawnOnOnce "vim"                                                               $ xappCommand' myEditor )
+    >>  ( sendMessage $ JumpToLayout "grid" )
 
 
 myEventHook :: Event -> X All

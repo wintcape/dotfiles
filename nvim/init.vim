@@ -25,7 +25,8 @@ Plug 'https://github.com/tpope/vim-commentary'                  " Comments for g
 Plug 'https://github.com/tc50cal/vim-terminal'                  " Vim terminal
 Plug 'https://github.com/preservim/tagbar'                      " Tagbar
 Plug 'https://github.com/neoclide/coc.nvim'                     " Code autocompletion
-Plug 'rubixninja314/vim-mcfunction'                             " mcfunction syntax
+Plug 'https://github.com/rubixninja314/vim-mcfunction'          " mcfunction syntax
+Plug 'https://github.com/lervag/vimtex'                         " LaTeX
 call plug#end()
 
 
@@ -119,6 +120,19 @@ autocmd QuitPre *.dat_pp !rm %
 
 
 
+" VimTeX
+
+" Vim server-mode required.
+if empty(v:servername) && exists('*remote_startserver')
+    call remote_startserver('VIM')
+endif
+
+" TeX viewer
+let g:vimtex_view_method = 'zathura'
+
+
+
+
 " Key remappings
 
 
@@ -150,7 +164,6 @@ nmap <F4> :TagbarToggle<CR>
 " <Tab>:   completion next
 " <S-Tab>: completion back
 " <CR>:    confirm completion
-" <BS>:    cancel completion
 inoremap <silent><expr> <Tab> pumvisible() ? "\<C-N>" : "\<Tab>"
 inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-P>" : "\<C-H>"
 inoremap <expr> <CR> pumvisible() ? coc#_select_confirm() : "\<CR>"
@@ -227,6 +240,8 @@ call OperatorHighlightIgnore('bash')
 call OperatorHighlightIgnore('notes')
 call OperatorHighlightIgnore('jinja')
 call OperatorHighlightIgnore('mcfunction')
+call OperatorHighlightIgnore('tex')
+call OperatorHighlightIgnore('plaintex')
 
 " Main implementation
 function HighlightOperators()
@@ -237,6 +252,8 @@ function HighlightOperators()
     
     if &filetype == 'haskell'
         syntax match Operators "\^\|@\|\$\|?\|+\|-\(-\(>\)\@!\|}\)\@!\|\*\|;\|:\|,\|<\|>\|&\||\|!\|\~\|%\|=\|)\|(\|{\(-\)\@!\|}\|\.\|\[\|\]\|/\(/\|*\)\@!" 
+    elseif &filetype == 'python'
+        syntax match Operators "\^\|@\|?\|+\|-\|\*\|;\|:\|,\|<\|>\|&\||\|!\|\~\|%\|=\|)\|(\|{\|}\|\.\|\[\|\]\|/"
     else
         syntax match Operators "\^\|@\|?\|+\|-\|\*\|;\|:\|,\|<\|>\|&\||\|!\|\~\|%\|=\|)\|(\|{\|}\|\.\|\[\|\]\|/\(/\|*\)\@!"
     endif
