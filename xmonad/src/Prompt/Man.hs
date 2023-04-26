@@ -40,7 +40,8 @@ manPrompt conf wid =
                 windows ( viewOnScreen 0 wid )
             >>  asks ( terminal . config )
             >>= \t ->
-                    spawnOn wid $ t ++ " -e man " ++ input )
+                    spawnOn wid $ t ++ " -e man " ++ input
+            )
     where
         
         getMans :: IO [ String ]

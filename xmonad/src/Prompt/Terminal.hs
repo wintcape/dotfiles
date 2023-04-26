@@ -22,7 +22,7 @@ instance XPrompt Terminal where
         where
             escape :: String -> String
             escape []       = ""
-            escape (x:xs)
+            escape ( x : xs )
                 | isSpecialChar x = '\\' : x : escape xs
                 | otherwise       =        x : escape xs
                 where
@@ -37,4 +37,5 @@ terminalPrompt c =
             mkXPrompt Terminal c
             ( getShellCompl cmds $ searchPredicate c )
             ( \input ->
-                    runInTerm ( "--title \"" ++ input ++ "\"" ) input )
+                    runInTerm ( "--title \"" ++ input ++ "\"" ) input
+            )

@@ -9,27 +9,31 @@ module Config.Colors    (
                         , colorCyan
                         , colorDarkGray
                         , colorDarkCyan
+                        , colorLightGray
                         ) where
 
 
 
 
-type XColor    = String
-colorBlack    :: XColor
-colorWhite    :: XColor
-colorGray     :: XColor
-colorRed      :: XColor
-colorGreen    :: XColor
-colorBlue     :: XColor
-colorCyan     :: XColor
-colorDarkCyan :: XColor
-colorDarkGray :: XColor
-colorBlack    = "#000000"
-colorWhite    = "#FFFFFF"
-colorGray     = "#808080"
-colorRed      = "#FF0000"
-colorGreen    = "#00FF00"
-colorBlue     = "#0000FF"
-colorCyan     = "#00FFFF"
-colorDarkGray = "#303030"
-colorDarkCyan = "#008080"
+type XColor     = String
+
+colorBlack     :: XColor
+colorWhite     :: XColor
+colorGray      :: XColor
+colorRed       :: XColor
+colorGreen     :: XColor
+colorBlue      :: XColor
+colorCyan      :: XColor
+colorDarkCyan  :: XColor
+colorDarkGray  :: XColor
+colorLightGray :: XColor
+colorBlack     = "#000000"
+colorWhite     = "#FFFFFF"
+colorGray      = "#808080"
+colorRed       = "#FF0000"
+colorGreen     = "#00FF00"
+colorBlue      = "#0000FF"
+colorCyan      = "#00FFFF"
+colorDarkGray  = "#303030"
+colorDarkCyan  = "#008080"
+colorLightGray = "#A0A0A0"

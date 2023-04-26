@@ -100,12 +100,7 @@ import qualified    Data.Map as M                       ( Map
                                                         )
 
 -- Custom: Common
-import              Config.Colors                       ( XColor
-                                                        , colorWhite
-                                                        , colorGray
-                                                        , colorRed
-                                                        , colorDarkGray
-                                                        )
+import              Config.Colors
 
 
 
@@ -128,8 +123,8 @@ myBorderWidth                    :: Dimension
 myBorderFColor , myBorderUFColor :: XColor
 
 myBorderWidth   = 2
-myBorderFColor  = colorWhite                -- focused window border color
-myBorderUFColor = colorDarkGray             -- unfocused window border color
+myBorderFColor  = colorDarkGray            -- focused window border color
+myBorderUFColor = colorBlack                -- unfocused window border color
 
 
 -- Workspaces
@@ -151,16 +146,18 @@ mySWNConfig = def
 -- Layouts
 --
 myFullLayout        = noBorders . avoidStruts $ 
-                        renamed [ Replace "full" ] Full
-myGridLayout        = avoidStruts $
-                            myFullLayout
-                        ||| renamed [ Replace "grid" ] ( SplitGrid L 1 1 ( 1 % 2 ) ( 1 % 1 ) ( 1 % 20 ) )
-                        |||                            ( SplitGrid T 1 1 ( 1 % 2 ) ( 1 % 1 ) ( 1 % 20 ) )
-myFullscreenLayout  = fullscreenFull $
+                            renamed [ Replace "full" ]
+                                Full
+
+myGridLayout        = lessBorders Screen . avoidStruts $
+                            renamed [ Replace "grid" ] (   ( SplitGrid L 1 1 ( 1 % 2 ) ( 1 % 1 ) ( 1 % 20 ) )
+                                                       ||| ( SplitGrid T 1 1 ( 1 % 2 ) ( 1 % 1 ) ( 1 % 20 ) )
+                                                       )
+                        ||| myFullLayout
+
+myFullscreenLayout    = fullscreenFull $
                             myFullLayout
                         ||| ( noBorders $ Full )
---myPdfLayout         = avoidStruts $ 
---                        renamed [ Replace "pdf" ] $ TwoPane ( 1 % 2 ) ( 1 % 2 )
 
 
 -- Status bar (xmobar)
@@ -271,7 +268,8 @@ myKeyBindings conf = mkKeymap conf $
 
     -- Session 
       ( "M-<Escape>"   ,    ( windows $ viewOnScreen 0 "sys" )                                  -- recompile and restart
-                        >>  ( runInTermOn "sys" "--title 'Recompiling. . .'" ( myPath ++ "build && xmonad --restart" ) ) )
+                        >>  ( runInTermOn "sys" "--title 'Recompiling. . .'" ( myPath ++ "build && xmonad --restart" ) )
+      )
     , ( "M-S-<Escape>" , io exitSuccess )                                                       -- kill X
     , ( "M-<F5>"       , runInTermElevated "Shutdown?" "--title 'Shutdown?'" "shutdown -h now" )-- elevated: shutdown
     , ( "M-<F6>"       , runInTermElevated "Reboot?"   "--title 'Reboot?'"   "reboot" )         -- elevated: reboot
@@ -295,9 +293,9 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-<KP_Right>"  , windows $ W.shift      ( myWorkspaces !! 6 ) )
 
     -- Current workspace
-    , ( "M-S-<Space>" , refresh )                                                               -- reset to default layout
+    , ( "M-S-<Space>" , refresh )                                                               -- refresh layout
     , ( "M-<Tab>"     , windows W.focusDown )                                                   -- move focus to next window
-    , ( "M-S-<Tab>"   , windows W.swapMaster )                                                  -- swap current window with master window
+    , ( "M-a"         , windows W.swapMaster )                                                  -- swap current window with master window
     , ( "M--"         , sendMessage Shrink )                                                    -- shrink master window
     , ( "M-="         , sendMessage Expand )                                                    -- expand master window
     , ( "M-q"         , kill1 )                                                                 -- kill current window
@@ -309,14 +307,17 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-M1-<Return>" , spawn         $ xappCommand myTerminal )                              -- alacritty
     , ( "M-M1-e"        , spawnOn "vim" $ xappCommand' myEditor )                               -- nvim
     , ( "M-M1-b"        , spawn         $ xappCommand myBrowser )                               -- firefox
-    , ( "M-<F1>"        , runInTermElevated "Launch steam?"                                     -- elevated: steam
+    , ( "M-<F1>"        , runInTermElevated   "Launch steam?"                                   -- elevated: steam
                                             ( "--title 'steam'          --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
-                                            "steam" )
-    , ( "M-<F2>"        , runInTermElevated "Chroot steam?"                                     -- elevated: steam-chroot
+                                              "steam"
+      )
+    , ( "M-<F2>"        , runInTermElevated   "Chroot steam?"                                   -- elevated: steam-chroot
                                             ( "--title 'steam-chroot'   --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
-                                            "steam-chroot" )
+                                              "steam-chroot"
+      )
     , ( "M-<F7>"        , runInTermElevated                                                     -- elevated: text editor
-                         ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) "" $ xappCommand myEditor )    
+                         ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) "" $ xappCommand myEditor
+      )
 
     -- Prompt / Scratchpad
     , ( "M-S-<Return>" , terminalPrompt myPromptConfig )                                        -- launch run prompt
@@ -354,7 +355,9 @@ myKeyBindings conf = mkKeymap conf $
 myKeyUpBindings :: XConfig l -> M.Map ( KeyMask , KeySym ) ( X () )
 myKeyUpBindings conf = mkKeymap conf $
     [
-      ( "M-`"       , sendMessage $ JumpToLayout "full" )                                       -- switch to full layout
+      ( "M-`"       ,   ( windows $ W.swapMaster )                                              -- switch to full layout
+                     >> ( sendMessage $ JumpToLayout "full" )
+      )
     , ( "M-<Space>" , return () )                                                               -- do nothing but pass the key
     ]
 
@@ -371,17 +374,20 @@ myMouseBindings :: XConfig l -> M.Map ( ButtonMask , Button ) ( Window -> X () )
 myMouseBindings _ = M.fromList $
     [
 
-      ( ( myModMask , 1 ) , ( \w ->
+      (( myModMask , 1 )    , ( \w ->                                                           -- M+LCLICK: position window
                                     focus w
                                 >>  mouseMoveWindow w
-                                >>  windows W.shiftMaster ) )                                   -- M+LCLICK: position window
-    , ( ( myModMask , 3 ) , ( \w ->
+                                >>  windows W.shiftMaster
+      ))
+    , (( myModMask , 3 )    , ( \w ->                                                           -- M+RCLICK: resize window
                                     focus w
                                 >>  mouseResizeWindow w
-                                >>  windows W.shiftMaster ) )                                   -- M+RCLICK: resize window
-    , ( ( myModMask , 2 ) , ( \w ->
+                                >>  windows W.shiftMaster
+      ))
+    , (( myModMask , 2 )    , ( \w ->                                                           -- M+MOUSE3: bring to front
                                     focus w
-                                >>  windows W.shiftMaster ) )                                   -- M+MOUSE3: bring to front
+                                >>  windows W.shiftMaster
+      ))
             
     -- Soundfx
     --, ( ( 0, 9 ) , const $ spawn "cmus-remote -C 'set continue=false';cmus-remote --queue --file \"$(ls archive-i/soundpad/* | shuf -n 1)\";" )
@@ -430,17 +436,17 @@ myManageHook = composeAll
             )                                                                               --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
 
         -- sys workspace
-        ,   className =? "Xmessage"                                                         --> doHideIgnore
+        ,   className =? "Xmessage"                                                         --> doHideIgnore -- temporary
                                                                                             --  >>  doShift "sys"
-        ,   (      className =? ( xappClassName myTerminal )
-            <&&> (    title =? "thunar"             <||> "thunar "             ?^ title
-            <||>      title =? "vlc"                <||> "vlc "                ?^ title
-            <||>      title =? "obs"                <||> "obs "                ?^ title
-            <||>      title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title
-            <||>      title =? "audacity"           <||> "audacity "           ?^ title    
-            <||>      title =? "firefox"            <||> "firefox "            ?^ title
-            <||>      title =? ( xappCommand myPDFViewer )
-            <||>      ( ( xappCommand myPDFViewer ) ++ " " ) ?^ title
+        ,   (    className =? ( xappClassName myTerminal )
+            <&&> (  title =? "thunar"             <||> "thunar "             ?^ title
+            <||>    title =? "vlc"                <||> "vlc "                ?^ title
+            <||>    title =? "obs"                <||> "obs "                ?^ title
+            <||>    title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title
+            <||>    title =? "audacity"           <||> "audacity "           ?^ title    
+            <||>    title =? "firefox"            <||> "firefox "            ?^ title
+            <||>    title =? ( xappCommand myPDFViewer )
+            <||>    ( ( xappCommand myPDFViewer ) ++ " " ) ?^ title
             ))                                                                              --> doShift "sys"
 
         -- Image viewing / capture
@@ -505,13 +511,17 @@ myManageHook = composeAll
         ,   (    className =? ( xappClassName myPDFViewer )
             <&&> currentWs =? "vim"
             )                                                                               --> liftX ( sendMessage $ JumpToLayout "grid" )
+                                                                                            >>  liftX ( windows W.swapMaster )
                                                                                             >>  doSink
         ,   (    className =? ( xappClassName myPDFViewer )
             <&&> currentWs /=? "vim"
             )                                                                               --> liftX ( windows $ viewOnScreen 0 "doc" )
                                                                                             >>  doShift "doc"
         
-        ] <+> namedScratchpadManageHook myScratchpads <+> manageDocks <+> manageSpawn
+        ]
+        <+> namedScratchpadManageHook myScratchpads
+        <+> manageDocks
+        <+> manageSpawn
  
         where
         
@@ -529,8 +539,6 @@ myManageHook = composeAll
             -- Variation of doShift that switches to the workspace
             doShift' = doF . liftM2 (.) W.greedyView W.shift
 
-            -- ifWorkspace
-
 
 myStartupHook :: X ()
 myStartupHook =
@@ -539,7 +547,6 @@ myStartupHook =
     >>  ( windows $ onlyOnScreen 1 "vim" )
     >>  ( runInTermElevatedOnce ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) ""  $ xappCommand  myEditor )
     >>  ( spawnOnOnce "vim"                                                               $ xappCommand' myEditor )
-    >>  ( sendMessage $ JumpToLayout "grid" )
 
 
 myEventHook :: Event -> X All
