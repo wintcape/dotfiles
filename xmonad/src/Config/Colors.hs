@@ -1,5 +1,4 @@
-module Config.Colors    (
-                          XColor
+module Config.Colors    ( XColor
                         , colorBlack
                         , colorWhite
                         , colorGray
@@ -9,7 +8,6 @@ module Config.Colors    (
                         , colorCyan
                         , colorDarkGray
                         , colorDarkCyan
-                        , colorLightGray
                         ) where
 
 
@@ -26,7 +24,7 @@ colorBlue      :: XColor
 colorCyan      :: XColor
 colorDarkCyan  :: XColor
 colorDarkGray  :: XColor
-colorLightGray :: XColor
+
 colorBlack     = "#000000"
 colorWhite     = "#FFFFFF"
 colorGray      = "#808080"
@@ -36,4 +34,3 @@ colorBlue      = "#0000FF"
 colorCyan      = "#00FFFF"
 colorDarkGray  = "#303030"
 colorDarkCyan  = "#008080"
-colorLightGray = "#A0A0A0"
