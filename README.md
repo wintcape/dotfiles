@@ -1,6 +1,6 @@
 Backups of configuration files for my makeshift home desktop environment.
 <br><br>
-For a two monitor setup.
+For a two monitor Unix setup.
 
 ## Defaults
 - **Terminal**: Alacritty
