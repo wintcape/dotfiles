@@ -1,19 +1,17 @@
-module Config.Colors    ( XColor
-                        , colorBlack
-                        , colorWhite
-                        , colorGray
-                        , colorRed
-                        , colorGreen
-                        , colorBlue
-                        , colorCyan
-                        , colorDarkGray
-                        , colorDarkCyan
-                        ) where
+module Config.Colors ( XColor
+                     , colorBlack
+                     , colorWhite
+                     , colorGray
+                     , colorRed
+                     , colorGreen
+                     , colorBlue
+                     , colorCyan
+                     , colorDarkGray
+                     , colorDarkCyan
+                     ) where
 
 
-
-
-type XColor     = String
+type XColor = String
 
 colorBlack     :: XColor
 colorWhite     :: XColor
@@ -24,7 +22,6 @@ colorBlue      :: XColor
 colorCyan      :: XColor
 colorDarkCyan  :: XColor
 colorDarkGray  :: XColor
-
 colorBlack     = "#000000"
 colorWhite     = "#FFFFFF"
 colorGray      = "#808080"

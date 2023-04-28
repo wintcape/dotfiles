@@ -1,6 +1,5 @@
-module Prompt.Man   (
-                      manPrompt
-                    ) where
+module Prompt.Man ( manPrompt
+                  ) where
 
 -- XMonad: Base
 import XMonad
@@ -8,22 +7,22 @@ import XMonad.Prelude
 
 -- XMonad: Prompt
 import XMonad.Prompt
-import XMonad.Prompt.Shell              (split)
+import XMonad.Prompt.Shell              ( split )
 
 -- XMonad: Actions
-import XMonad.Actions.OnScreen          (viewOnScreen)
-import XMonad.Actions.SpawnOn           (spawnOn)
+import XMonad.Actions.OnScreen          ( viewOnScreen )
+import XMonad.Actions.SpawnOn           ( spawnOn )
 
 -- System
 import System.Directory
-import System.FilePath                  (dropExtensions, (</>))
+import System.FilePath                  ( ( </> )
+                                        , dropExtensions
+                                        )
 import System.IO
 import System.Process
 
 -- Control
 import qualified Control.Exception as E
-
-
 
 
 data Man = Man
@@ -36,11 +35,12 @@ manPrompt conf wid =
     >>= \mans ->
             mkXPrompt Man conf
             ( manCompl conf mans )
-            ( \input ->
-                windows ( viewOnScreen 0 wid )
-            >>  asks ( terminal . config )
-            >>= \t ->
-                    spawnOn wid $ t ++ " -e man " ++ input
+            (
+                \input ->
+                        windows ( viewOnScreen 0 wid )
+                    >>  asks ( terminal . config )
+                    >>= \t ->
+                            spawnOn wid $ t ++ " -e man " ++ input
             )
     where
         

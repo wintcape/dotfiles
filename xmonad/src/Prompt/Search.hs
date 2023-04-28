@@ -1,6 +1,5 @@
-module  Prompt.Search   (
-                          searchPrompt
-                        ) where
+module Prompt.Search ( searchPrompt
+                     ) where
 
 -- XMonad: Base
 import  XMonad
@@ -9,12 +8,13 @@ import  XMonad
 import  XMonad.Prompt
 
 -- XMonad: Actions
-import  XMonad.Actions.Search   (Browser, SearchEngine(..), search)
+import  XMonad.Actions.Search   ( Browser
+                                , SearchEngine(..)
+                                , search
+                                )
 
 -- Data
-import  Data.List               (isPrefixOf)
-
-
+import  Data.List               ( isPrefixOf )
 
 
 newtype Search = Search String

@@ -1,5 +1,4 @@
-module Util.Run (
-                  runInTerm
+module Util.Run ( runInTerm
                 , runInTermOn
                 , runInTermElevated
                 , runInTermOnce
@@ -13,13 +12,13 @@ import Config.Defaults
 import XMonad
 
 -- XMonad: Actions
-import XMonad.Actions.OnScreen  (viewOnScreen)
-import XMonad.Actions.SpawnOn   (spawnOn)
+import XMonad.Actions.OnScreen  ( viewOnScreen )
+import XMonad.Actions.SpawnOn   ( spawnOn )
 
 -- XMonad: Util
-import XMonad.Util.SpawnOnce    (spawnOnce, spawnOnOnce)
-
-
+import XMonad.Util.SpawnOnce    ( spawnOnce
+                                , spawnOnOnce
+                                )
 
 
 runInTerm   , runInTermOnce   ::                String -> String -> X ()
@@ -39,7 +38,7 @@ runInTermElevatedOnce msg opt cmd =
 
 commandStr :: String -> String -> String
 commandStr opt cmd = ( xappCommand myTerminal ) ++ " " ++ opt ++ " -e "
-                  ++ myPath ++ "script/eval \"" ++ cmd ++ "\" \"" ++ myLogFile ++ "\""
+                     ++ myPath ++ "script/eval \"" ++ cmd ++ "\" \"" ++ myLogFile ++ "\""
 
 elevatedCommandStr :: String -> String -> String -> String
 elevatedCommandStr msg opt cmd = commandStr opt ( "echo " ++ msg ++ ";sudo " ++ cmd ++ ";" )

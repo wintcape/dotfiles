@@ -1,18 +1,17 @@
-module  Prompt.Terminal (
-                          terminalPrompt
-                        ) where
+module Prompt.Terminal ( terminalPrompt
+                       ) where
 
 -- XMonad: Base
 import XMonad
 
 -- XMonad: Prompt
 import XMonad.Prompt
-import XMonad.Prompt.Shell  (getCommands, getShellCompl)
+import XMonad.Prompt.Shell  ( getCommands
+                            , getShellCompl
+                            )
 
 -- Custom: Util
-import Util.Run             (runInTerm)
-
-
+import Util.Run             ( runInTerm )
 
 
 data Terminal = Terminal
@@ -36,6 +35,7 @@ terminalPrompt c =
     >>= \cmds ->
             mkXPrompt Terminal c
             ( getShellCompl cmds $ searchPredicate c )
-            ( \input ->
+            (
+                \input ->
                     runInTerm ( "--title \"" ++ input ++ "\"" ) input
             )

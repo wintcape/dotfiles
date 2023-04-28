@@ -1,7 +1,6 @@
-module Hooks.Keys   (
-                      keyDownEventHook
-                    , keyUpEventHook
-                    ) where
+module Hooks.Keys ( keyDownEventHook
+                  , keyUpEventHook
+                  ) where
 
 -- XMonad: Base
 import              XMonad
@@ -11,9 +10,9 @@ import qualified    XMonad.Util.ExtensibleState as XS
 
 -- Data
 import              Data.Monoid
-import qualified    Data.Map as M                       (Map, lookup)
-
-
+import qualified    Data.Map as M                       ( Map
+                                                        , lookup
+                                                        )
 
 
 data KeyState = Up | Down deriving ( Eq , Read )

@@ -37,10 +37,11 @@ For a two monitor Unix setup.
 - [nbted](https://github.com/C4K3/nbted) (must be pre-installed) and [mcfunction](https://minecraft.fandom.com/wiki/Function_(Java_Edition)) (builtin) plugins for neovim<br>(for editing Minecraft game files in neovim)
 - Steam (must be pre-installed in chroot environment)
 
-## Preparing the environment
+## Preparing the host system
 1. Ensure all dependencies are installed on the host system.
 2. Extract the repository into the desired `$HOME/.config` directory on the host system.
 3. Move `.bash_profile`, `.bashrc`, and `.xinitrc` into the `$HOME` directory.
+4. Edit `.bash_profile`, `.bashrc`, and `.xinitrc` to match host system hardware and desired defaults.
 
 ## Building XMonad
 The main application that acts as the window manager for X is a custom build of [XMonad](https://xmonad.org/).<br>
@@ -51,8 +52,7 @@ $HOME/.config/xmonad/build
 ```
 
 ## Launching the environment
-1. Edit `.bash_profile`, `.bashrc`, and `.xinitrc` to match host system hardware and desired defaults.
-2. Start X:
+1. Start X:
 ```
 startx
 ```

@@ -7,14 +7,15 @@ import          Config.Defaults
 import          Xmobar
 
 -- XMonad: Hooks
-import          XMonad.Hooks.StatusBar.PP   (wrap, xmobarColor)
+import          XMonad.Hooks.StatusBar.PP   ( wrap
+                                            , xmobarColor
+                                            )
 
 -- Custom: Plugin
 import          Tray.Alsa 
 
 -- Custom: Colors
 import          Config.Colors
-
 
 
 myFonts :: [ String ]
