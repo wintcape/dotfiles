@@ -30,9 +30,10 @@ For a two monitor setup.
 - OBS Studio
 - Audacity
 - Minecraft
-- latexmk
 - Zathura
-- [coc.nvim](https://github.com/neoclide/coc.nvim) (language servers supported for Haskell, C/C++, bash, Typescript, LaTeX)
+- xclip
+- [coc.nvim](https://github.com/neoclide/coc.nvim) (neovim language servers supported for Haskell, C/C++, bash, Typescript)
+- [VimTex](https://github.com/lervag/vimtex) (for editing and compiling TeX in neovim)
 - [nbted](https://github.com/C4K3/nbted) (must be pre-installed) and [mcfunction](https://minecraft.fandom.com/wiki/Function_(Java_Edition)) (builtin) plugins for neovim<br>(for editing Minecraft game files in neovim)
 - Steam (must be pre-installed in chroot environment)
 
@@ -40,7 +41,6 @@ For a two monitor setup.
 1. Ensure all dependencies are installed on the host system.
 2. Extract the repository into the desired `$HOME/.config` directory on the host system.
 3. Move `.bash_profile`, `.bashrc`, and `.xinitrc` into the `$HOME` directory.
-4. Edit `$HOME/.config/xmonad/src/Config/Defaults.hs` to match `$HOME` path and desired defaults.
 
 ## Building XMonad
 The main application that acts as the window manager for X is a custom build of [XMonad](https://xmonad.org/).<br>
