@@ -308,11 +308,11 @@ myKeyBindings conf = mkKeymap conf $
     , ( "M-M1-e"        , spawnOn "vim" $ xappCommand' myEditor )                               -- nvim
     , ( "M-M1-b"        , spawn         $ xappCommand myBrowser )                               -- firefox
     , ( "M-<F1>"        , runInTermElevated   "Launch steam?"                                   -- elevated: steam
-                                            ( "--title 'steam'          --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
+                                            ( "--title 'steam'          --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.toml" )
                                               "steam"
       )
     , ( "M-<F2>"        , runInTermElevated   "Chroot steam?"                                   -- elevated: steam-chroot
-                                            ( "--title 'steam-chroot'   --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.yml" )
+                                            ( "--title 'steam-chroot'   --config-file " ++ myPath ++ "../alacritty/alacritty-chroot.toml" )
                                               "steam-chroot"
       )
     , ( "M-<F7>"        , runInTermElevated                                                     -- elevated: text editor

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Chroot
-alacritty --config-file "/home/wintcape/.config/alacritty/alacritty-chroot.yml" -e $1 chroot $STEAM_DIR /bin/bash
+alacritty --config-file "/home/wintcape/.config/alacritty/alacritty-chroot.toml" -e $1 chroot $STEAM_DIR /bin/bash
 
 # Unmount on exit
 umount --verbose $STEAM_DIR/proc
