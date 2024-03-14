@@ -427,6 +427,7 @@ myManageHook = composeAll
         ,   className =? "notification"                                                     --> myDoFloat
         ,   className =? "splash"                                                           --> myDoFloat
         ,   className =? "toolbar"                                                          --> myDoFloat
+        ,   className =? "vken"                                                             --> doFloat
 
         -- Thunar
         ,   className =? "Thunar"                                                           --> doRectFloat ( W.RationalRect (1 % 48) (1 % 48) (1 % 4) (1 % 4) )
@@ -445,6 +446,7 @@ myManageHook = composeAll
             <||>    title =? "minecraft-launcher" <||> "minecraft-launcher " ?^ title
             <||>    title =? "audacity"           <||> "audacity "           ?^ title    
             <||>    title =? "firefox"            <||> "firefox "            ?^ title
+            <||>    title =? "fontforge"          <||> "fontforge "          ?^ title
             <||>    title =? ( xappCommand myPDFViewer )
             <||>    ( ( xappCommand myPDFViewer ) ++ " " ) ?^ title
             ))                                                                              --> doShift "sys"
@@ -505,7 +507,6 @@ myManageHook = composeAll
         ,   (      className =? ( xappClassName myTerminal )
             <&&> ( title     =? "cmus" <||> "cmus " ?^ title
             ))                                                                              --> doShift' "mus"
-        ,   className =? "vken"                                                             --> doFloat
         
         -- PDF viewer
         ,   (    className =? ( xappClassName myPDFViewer )
@@ -517,6 +518,15 @@ myManageHook = composeAll
             <&&> currentWs /=? "vim"
             )                                                                               --> liftX ( windows $ viewOnScreen 0 "doc" )
                                                                                             >>  doShift "doc"
+        -- Fontforge
+        ,   className =? "fontforge"                                                        --> doShift' "ful"
+
+        ,   (      className =? "fontforge"
+            <&&> ( title     =? "FontForge"
+            <||>   title     =? "Open Font"
+            <||>   title     =? "Kerning"
+            <||>   title     =? "Warnings"
+            ))                                                                              --> myDoFloat 
         
         ]
         <+> namedScratchpadManageHook myScratchpads
@@ -531,9 +541,11 @@ myManageHook = composeAll
             x ?^ q = fmap ( x `isPrefixOf` ) q
 
             -- myDoFloat
-            -- Custom manager for floating windows. Has a fixed size of 50% viewport dims
+            -- Custom managers for floating windows. 
             myDoFloat :: ManageHook
-            myDoFloat = doRectFloat ( W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2) )
+            myDoFloat' :: ManageHook
+            myDoFloat = doRectFloat ( W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2) ) 
+            myDoFloat' = doRectFloat ( W.RationalRect (1 % 16) (1 % 16) (7 % 8) (7 % 8) )
             
             -- doShift'
             -- Variation of doShift that switches to the workspace
@@ -545,8 +557,8 @@ myStartupHook =
         ( spawn $ "truncate -s 0 " ++ myLogFile )       -- clear log file
     >>  ( windows $ onlyOnScreen 0 "sys" )
     >>  ( windows $ onlyOnScreen 1 "vim" )
-    >>  ( runInTermElevatedOnce ( "Launch sudo " ++ ( xappCommand myEditor ) ++ "?" ) ""  $ xappCommand  myEditor )
-    >>  ( spawnOnOnce "vim"                                                               $ xappCommand' myEditor )
+    >>  ( spawnOnOnce "vim" $ xappCommand' myEditor )
+    >>  ( nextScreen )
 
 
 myEventHook :: Event -> X All

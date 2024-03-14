@@ -11,6 +11,7 @@ set clipboard+=unnamedplus                                      " Set global cli
 set autochdir                                                   " Dynamic pwd
 set splitbelow                                                  " Vertical split
 set splitright                                                  " Horizontal split
+set switchbuf+=usetab,newtab                                    " Auto-buffer-switch behavior
 
 
 
@@ -19,14 +20,16 @@ set splitright                                                  " Horizontal spl
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'https://github.com/tpope/vim-surround'                    " Surround
+Plug 'https://github.com/tpope/vim-commentary'                  " Automatic commenting
+Plug 'https://github.com/tpope/vim-abolish'                     " Advanced text substitutions
 Plug 'https://github.com/vim-airline/vim-airline'               " Status bar
 Plug 'https://github.com/preservim/nerdtree'                    " Directory explorer
-Plug 'https://github.com/tpope/vim-commentary'                  " Comments for gcc, gc
-Plug 'https://github.com/tc50cal/vim-terminal'                  " Vim terminal
 Plug 'https://github.com/preservim/tagbar'                      " Tagbar
+Plug 'https://github.com/tc50cal/vim-terminal'                  " Vim terminal
 Plug 'https://github.com/neoclide/coc.nvim'                     " Code autocompletion
-Plug 'https://github.com/rubixninja314/vim-mcfunction'          " mcfunction syntax
-Plug 'https://github.com/lervag/vimtex'                         " LaTeX
+Plug 'https://github.com/rubixninja314/vim-mcfunction'          " mcfunction syntax support
+Plug 'https://github.com/lervag/vimtex'                         " LaTeX support
+Plug 'tikhomirov/vim-glsl'                                      " GLSL syntax highlighting
 call plug#end()
 
 
@@ -114,8 +117,22 @@ autocmd QuitPre *.dat_pp !rm %
 " Vim surround
 
 " Default keybindings are left untouched:
-"     ysw<symbol>  to encase a single character within <symbol>.
-"     ysiw<symbol> to encase a single word within <symbol>.
+"     ds<delim> in normal mode to delete <delim>.
+"     ysw<delim> in normal mode to encase a single character within <delim>.
+"     ysiw<delim> in normal mode to encase a single word within <delim>.
+"     cs<delim1><delim2> in normal mode to switch <delim1> to <delim2>.
+"     S<delim> in visual line mode to surround lines with <delim>.
+
+
+
+" Vim commentary
+
+" Default keybindings are left untouched:
+"     gcc in normal mode to comment out one line.
+"     gc in visual mode to comment out the selection.
+
+" Set comment regex for a filetype:
+"     autocmd FileType <filetype> setlocal commentstring=<comment> 
 
 
 
@@ -191,10 +208,13 @@ imap <C-a> <ESC><C-a>
 vmap a <ESC><C-a>
 
 
+" Pointer dereferencing.
+
+imap <C-z> <ESC>bi(<Space>*<ESC>ea<Space>)
+
 
 
 " Startup hook
-
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in")
                     \ | cd $HOME

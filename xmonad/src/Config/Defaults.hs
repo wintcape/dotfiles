@@ -21,7 +21,7 @@ myLogFile :: String
 myLogFile = myPath ++ ".log"
 
 myFont :: String
-myFont = "xft:PxPlus IBM VGA 8x16:"
+myFont = "xft:PxPlus IBM VGA 8x16:style=Regular:"
 
 myTerminal        :: XApp
 myBrowser         :: XApp
